@@ -4,6 +4,7 @@ const shell = electron.shell;
 const path = require('path')
 const isDev = require('electron-is-dev')
 const BrowserWindow = electron.BrowserWindow
+const electronNodeUtil = require('./electron-node-util');
 
 let mainWindow
 
@@ -13,14 +14,16 @@ function createWindow() {
     height: 600,
     webPreferences: {
       nodeIntegration: true,
-    },
-  })
+      webSecurity: false,
+      allowRunningInsecureContent: false
+    }
+  });
 
   mainWindow.loadURL(
     isDev
       ? 'http://localhost:3000'
       : `file://${path.join(__dirname, '../build/index.html')}`,
-  )
+  );
 
   mainWindow.on("new-window", function(event, url) {
     event.preventDefault();
@@ -29,19 +32,23 @@ function createWindow() {
 
   mainWindow.on('closed', () => {
     mainWindow = null
-  })
+  });
 }
 
-app.on('ready', createWindow)
+app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
-})
+});
 
 app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
+});
+
+electron.ipcMain.on('asynchronous-message', (e,arg) => {
+  electronNodeUtil.queryAniList(arg.url, arg.method, arg.headers, arg.body, e);
 })

@@ -3,6 +3,8 @@ import { ConfigEntry } from "../dm/ConfigEntry";
 import PouchDb from "pouchdb-browser";
 import upsertPlugin from "pouchdb-upsert";
 export const initialState: AppState = {
+    anilistApi: "https://graphql.anilist.co",
+    clientId: 2979
 }
 
 export enum AppStateActionTypes {
@@ -17,7 +19,9 @@ export interface IAppStateBaseAction {
 
 export interface AppState {
     configDb?: PouchDB.Database<ConfigEntry>,
-    pin?: string
+    pin?: string,
+    anilistApi?: string,
+    clientId?: number
 }
 
 export type TReducerActions = IInitConfigDb | ISetPin | ILoadConfigFromDb

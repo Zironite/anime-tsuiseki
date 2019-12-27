@@ -7,6 +7,7 @@ import { ISetPin, IInitConfigDb, ILoadConfigFromDb } from './globalState/actions
 import { ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { ConfigEntry } from './dm/ConfigEntry';
+import UserToolbar from './components/user-components/UserToolbar';
 
 interface AppComponentState {
   enterPin: boolean
@@ -27,14 +28,17 @@ class App extends Component<AppProps,AppComponentState> {
   render() {
     return (
       <div className="m-2">
-        <div>
-          <a className="btn btn-primary" 
-            href="https://anilist.co/api/v2/oauth/authorize?client_id=2979&response_type=token" 
-            target="_blank"
-            onClick={this.enablePinTextBox}>
-            Login
-          </a>
-        </div>
+        { this.props.pin ?
+          <UserToolbar /> :
+          <div>
+            <a className="btn btn-primary" 
+              href={`https://anilist.co/api/v2/oauth/authorize?client_id=${this.props.clientId}&response_type=token`}
+              target="_blank"
+              onClick={this.enablePinTextBox}>
+              Login
+            </a>
+          </div>
+        }
         <div className="mt-2">
           { this.state && this.state.enterPin ? 
               <textarea className="form-control"
@@ -66,7 +70,8 @@ class App extends Component<AppProps,AppComponentState> {
 
 const mapStateToProps = (state: AppState) => ({
   configDb: state.configDb,
-  pin: state.pin
+  pin: state.pin,
+  clientId: state.clientId
 })
 const initConfigDb = () => {
   return {

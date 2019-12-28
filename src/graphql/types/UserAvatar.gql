@@ -1,0 +1,4 @@
+type UserAvatar{
+    large: String
+    medium: String
+}

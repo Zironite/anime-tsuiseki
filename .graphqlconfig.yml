@@ -1,0 +1,7 @@
+projects:
+  app:
+    schemaPath: src/**/*.gql
+    includes: ["**/*.gql"]
+    extensions:
+      endpoints:
+        default: http://localhost:3000

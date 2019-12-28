@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppState } from '../../globalState/rootReducer'
-const { ipcRenderer } = window.require('electron');
+import { queryAniList } from '../../util/AniListApiUtil';
 
 class UserToolbar extends Component<UserToolbarProps,{}> {
     constructor(props: UserToolbarProps) {
@@ -19,7 +19,8 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
     }
 
     getUserData() {
-        const query = `query {
+        const query = `
+        query {
             Viewer {
               name
             }
@@ -30,21 +31,11 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
         }));
 
         console.log(`Querying ${this.props.url}`);
-        ipcRenderer.on('asynchronous-reply', (event, arg) => {
-            console.log(arg);
-        });
-        ipcRenderer.send('asynchronous-message', { 
-            url: this.props.url as string, 
-            method: 'POST', 
-            headers: {
-                'Authorization': `Bearer ${this.props.pin}`,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                query: query
+        queryAniList(this.props.url as string, this.props.pin as string, query)
+            .then(response => {
+                console.log(response);
             })
-        });
+            .catch(err => console.error(err));
     }
 
     componentDidUpdate(prevProps: UserToolbarProps) {

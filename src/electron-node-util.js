@@ -2,7 +2,6 @@ const request = require('request');
 
 module.exports = {
     queryAniList: (url, method, headers, body, electronEvent) => {
-        console.log(body);
         request({
             method: method,
             url: url,

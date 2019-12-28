@@ -1,13 +1,15 @@
 const { ipcRenderer } = window.require('electron');
 
-export function queryAniList(url:string, pin: string, query: string) {
-    const promise = new Promise((resolve,reject) => {
+export function queryAniList<TSuccess>(url:string, pin: string, query: string) {
+    const promise: Promise<{ body?: TSuccess, response?: any } & { err?: any }> = new Promise((resolve,reject) => {
         ipcRenderer.on('asynchronous-reply', (event, arg) => {
             if (arg.err) {
-                reject(arg.err);
+                reject({
+                    err: arg.err
+                });
             } else {
                 resolve({
-                    body: arg.body,
+                    body: JSON.parse(arg.body) as TSuccess,
                     response: arg.response
                 });
             }

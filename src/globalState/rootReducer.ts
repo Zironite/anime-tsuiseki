@@ -1,7 +1,8 @@
-import { IInitConfigDb, ISetPin, ILoadConfigFromDb } from "./actions";
+import { IInitConfigDb, ISetPin, ILoadConfigFromDb, ISetUser } from "./actions";
 import { ConfigEntry } from "../dm/ConfigEntry";
 import PouchDb from "pouchdb-browser";
 import upsertPlugin from "pouchdb-upsert";
+import { GQLUser } from "../graphql/graphqlTypes";
 export const initialState: AppState = {
     anilistApi: "https://graphql.anilist.co",
     clientId: 2979
@@ -10,7 +11,8 @@ export const initialState: AppState = {
 export enum AppStateActionTypes {
     INIT_CONFIG_DB,
     SET_PIN,
-    LOAD_CONFIG_FROM_DB
+    LOAD_CONFIG_FROM_DB,
+    SET_USER
 }
 
 export interface IAppStateBaseAction {
@@ -21,10 +23,11 @@ export interface AppState {
     configDb?: PouchDB.Database<ConfigEntry>,
     pin?: string,
     anilistApi?: string,
-    clientId?: number
+    clientId?: number,
+    currentUser?: GQLUser
 }
 
-export type TReducerActions = IInitConfigDb | ISetPin | ILoadConfigFromDb
+export type TReducerActions = IInitConfigDb | ISetPin | ILoadConfigFromDb | ISetUser
 export function rootReducer(state: AppState = initialState, action: TReducerActions): AppState {
     switch(action.type) {
         case AppStateActionTypes.INIT_CONFIG_DB:
@@ -54,6 +57,8 @@ export function rootReducer(state: AppState = initialState, action: TReducerActi
                 console.error(err);
             });
             return { ...state, pin: action.newPin };
+        case AppStateActionTypes.SET_USER:
+            return { ...state, currentUser: action.user};
         default:
             return state;
     }

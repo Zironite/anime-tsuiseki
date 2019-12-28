@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AppState } from '../../globalState/rootReducer'
+import { AppState, AppStateActionTypes } from '../../globalState/rootReducer'
 import { queryAniList } from '../../util/AniListApiUtil';
 import { loader } from "graphql.macro";
+import { GQLUser } from '../../graphql/graphqlTypes';
+import { ISetUser } from '../../globalState/actions';
+import "./UserToolbar.css";
 
 class UserToolbar extends Component<UserToolbarProps,{}> {
     getCurrentUserDataQuery = loader("../../graphql/queries/GetCurrentUserData.gql");
@@ -15,7 +18,8 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
     render() {
         return (
             <div>
-                
+                <img src={this.props.currentUser?.avatar?.medium} className="rounded-circle avatar-img" />
+                <span>{this.props.currentUser?.name}</span>
             </div>
         )
     }
@@ -28,9 +32,14 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
         }));
 
         console.log(`Querying ${this.props.url}`);
-        queryAniList(this.props.url as string, this.props.pin as string, query)
+        type TGQLGetUserDataReturnType = {
+            data: {
+                Viewer: GQLUser
+            }
+        }
+        queryAniList<TGQLGetUserDataReturnType>(this.props.url as string, this.props.pin as string, query)
             .then(response => {
-                console.log(response);
+                this.props.setUser(response.body?.data.Viewer!);
             })
             .catch(err => console.error(err));
     }
@@ -45,10 +54,18 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
 const mapStateToProps = (state: AppState) => ({
     pin: state.pin,
     url: state.anilistApi,
-    clientId: state.clientId
+    clientId: state.clientId,
+    currentUser: state.currentUser
 });
-const mapDispatchToProps = {
 
+const setUser = (user: GQLUser) => {
+    return {
+        type: AppStateActionTypes.SET_USER,
+        user: user
+    }
+}
+const mapDispatchToProps = {
+    setUser
 };
 type UserToolbarProps = ReturnType<typeof mapStateToProps> & typeof mapDispatchToProps;
 

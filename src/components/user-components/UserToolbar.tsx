@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppState } from '../../globalState/rootReducer'
 import { queryAniList } from '../../util/AniListApiUtil';
+import { loader } from "graphql.macro";
 
 class UserToolbar extends Component<UserToolbarProps,{}> {
+    getCurrentUserDataQuery = loader("../../graphql/queries/GetCurrentUserData.gql");
     constructor(props: UserToolbarProps) {
         super(props);
         this.getUserData();
@@ -19,12 +21,7 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
     }
 
     getUserData() {
-        const query = `
-        query {
-            Viewer {
-              name
-            }
-        }`
+        const query = this.getCurrentUserDataQuery.loc?.source.body!;
 
         console.log(JSON.stringify({
             query: query

@@ -19,12 +19,15 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
     }
 
     getUserData() {
-        const query = `
-        query {
+        const query = `query {
             Viewer {
-                name
+              name
             }
         }`
+
+        console.log(JSON.stringify({
+            query: query
+        }));
 
         console.log(`Querying ${this.props.url}`);
         ipcRenderer.on('asynchronous-reply', (event, arg) => {
@@ -38,7 +41,9 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            body: JSON.stringify(query)
+            body: JSON.stringify({
+                query: query
+            })
         });
     }
 

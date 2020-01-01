@@ -8,6 +8,7 @@ import { ISetUser } from '../../globalState/actions';
 import "./UserToolbar.css";
 import { Dropdown } from "react-bootstrap";
 import { FaUser, FaSignOutAlt } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 
 enum DropdownOptions {
     PROFILE = "1",
@@ -32,7 +33,11 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
                         <span>{this.props.currentUser?.name}</span>
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                        <Dropdown.Item eventKey={DropdownOptions.PROFILE}><FaUser /> Profile</Dropdown.Item>
+                        <Dropdown.Item eventKey={DropdownOptions.PROFILE} 
+                            as={Link} 
+                            to={`/profile/${this.props.currentUser?.id}`}>
+                            <FaUser /> Profile
+                        </Dropdown.Item>
                         <Dropdown.Divider />
                         <Dropdown.Item eventKey={DropdownOptions.LOGOUT}><FaSignOutAlt /> Log out</Dropdown.Item>
                     </Dropdown.Menu>

@@ -9,6 +9,8 @@ import { ThunkAction } from 'redux-thunk';
 import { ConfigEntry } from './dm/ConfigEntry';
 import UserToolbar from './components/user-components/UserToolbar';
 import ReactModal from 'react-modal';
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import ProfileView from './components/user-components/ProfileView';
 
 interface AppComponentState {
   enterPin: boolean
@@ -30,23 +32,30 @@ class App extends Component<AppProps,AppComponentState> {
   render() {
     return (
       <div>
-        { this.props.pin ?
-          <UserToolbar /> :
-          <div className="m-2">
-            <a className="btn btn-primary" 
-              href={`https://anilist.co/api/v2/oauth/authorize?client_id=${this.props.clientId}&response_type=token`}
-              target="_blank"
-              onClick={this.enablePinTextBox}>
-              Login
-            </a>
-          </div>
-        }
-        <ReactModal isOpen={this.state.enterPin}
-          onRequestClose={this.disablePinTextBox}>
-          <div className="mt-2">
-            <textarea className="form-control" onPaste={this.finishAuthentication}/>
-          </div>
-        </ReactModal>
+        <BrowserRouter>
+          { this.props.pin ?
+            <UserToolbar /> :
+            <div className="m-2">
+              <a className="btn btn-primary" 
+                href={`https://anilist.co/api/v2/oauth/authorize?client_id=${this.props.clientId}&response_type=token`}
+                target="_blank"
+                onClick={this.enablePinTextBox}>
+                Login
+              </a>
+            </div>
+          }
+          <ReactModal isOpen={this.state.enterPin}
+            onRequestClose={this.disablePinTextBox}>
+            <div className="mt-2">
+              <textarea className="form-control" onPaste={this.finishAuthentication}/>
+            </div>
+          </ReactModal>
+          <Switch>
+            <Route path="/profile/:profileId">
+              <ProfileView />
+            </Route>
+          </Switch>
+        </BrowserRouter>
       </div>)
   }
 

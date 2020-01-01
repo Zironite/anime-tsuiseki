@@ -62,7 +62,7 @@ const setUser = (user: GQLUser) => {
     return {
         type: AppStateActionTypes.SET_USER,
         user: user
-    }
+    } as ISetUser;
 }
 const mapDispatchToProps = {
     setUser

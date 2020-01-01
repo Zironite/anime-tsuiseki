@@ -29,10 +29,10 @@ class App extends Component<AppProps,AppComponentState> {
 
   render() {
     return (
-      <div className="m-2">
+      <div>
         { this.props.pin ?
           <UserToolbar /> :
-          <div>
+          <div className="m-2">
             <a className="btn btn-primary" 
               href={`https://anilist.co/api/v2/oauth/authorize?client_id=${this.props.clientId}&response_type=token`}
               target="_blank"

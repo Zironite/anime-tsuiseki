@@ -17,8 +17,8 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
 
     render() {
         return (
-            <div>
-                <img src={this.props.currentUser?.avatar?.medium} className="rounded-circle avatar-img" />
+            <div className="user-toolbar">
+                <img src={this.props.currentUser?.avatar?.medium} className="rounded-circle avatar-img m-3" />
                 <span>{this.props.currentUser?.name}</span>
             </div>
         )

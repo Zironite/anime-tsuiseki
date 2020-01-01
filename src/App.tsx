@@ -8,6 +8,7 @@ import { ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { ConfigEntry } from './dm/ConfigEntry';
 import UserToolbar from './components/user-components/UserToolbar';
+import ReactModal from 'react-modal';
 
 interface AppComponentState {
   enterPin: boolean
@@ -16,12 +17,13 @@ interface AppComponentState {
 class App extends Component<AppProps,AppComponentState> {
   constructor(props: AppProps) {
     super(props);
-    this.setState({
+    this.state = {
       enterPin: false
-    });
+    };
     this.props.initConfigDb();
     console.log(this.props);
     this.enablePinTextBox = this.enablePinTextBox.bind(this);
+    this.disablePinTextBox = this.disablePinTextBox.bind(this);
     this.finishAuthentication = this.finishAuthentication.bind(this);
   }
 
@@ -39,12 +41,12 @@ class App extends Component<AppProps,AppComponentState> {
             </a>
           </div>
         }
-        <div className="mt-2">
-          { this.state && this.state.enterPin ? 
-              <textarea className="form-control"
-                onPaste={this.finishAuthentication}/> : 
-              null }
-        </div>
+        <ReactModal isOpen={this.state.enterPin}
+          onRequestClose={this.disablePinTextBox}>
+          <div className="mt-2">
+            <textarea className="form-control" onPaste={this.finishAuthentication}/>
+          </div>
+        </ReactModal>
       </div>)
   }
 
@@ -54,9 +56,16 @@ class App extends Component<AppProps,AppComponentState> {
     });
   }
 
+  disablePinTextBox() {
+    this.setState({
+      enterPin: false
+    });
+  }
+
   finishAuthentication(e: React.ClipboardEvent<HTMLTextAreaElement>) {
     const text = e.clipboardData.getData("text");
     this.props.setPin(text);
+    this.disablePinTextBox();
   }
 
   componentDidUpdate(prevProps: AppProps) {

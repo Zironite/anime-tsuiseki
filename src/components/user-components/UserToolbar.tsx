@@ -6,6 +6,13 @@ import { loader } from "graphql.macro";
 import { GQLUser } from '../../graphql/graphqlTypes';
 import { ISetUser } from '../../globalState/actions';
 import "./UserToolbar.css";
+import { Dropdown } from "react-bootstrap";
+import { FaUser, FaSignOutAlt } from "react-icons/fa";
+
+enum DropdownOptions {
+    PROFILE = "1",
+    LOGOUT = "2"
+}
 
 class UserToolbar extends Component<UserToolbarProps,{}> {
     getCurrentUserDataQuery = loader("../../graphql/queries/GetCurrentUserData.gql");
@@ -13,13 +20,23 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
         super(props);
         this.getUserData();
         this.getUserData = this.getUserData.bind(this);
+        this.handleDropdownOnSelect = this.handleDropdownOnSelect.bind(this);
     }
 
     render() {
         return (
-            <div className="user-toolbar">
-                <img src={this.props.currentUser?.avatar?.medium} className="rounded-circle avatar-img m-3" />
-                <span>{this.props.currentUser?.name}</span>
+            <div className="user-toolbar p-2">
+                <Dropdown onSelect={this.handleDropdownOnSelect}>
+                    <Dropdown.Toggle variant="info" id="user-dropdown">
+                        <img src={this.props.currentUser?.avatar?.medium} className="rounded-circle avatar-img mr-3" />
+                        <span>{this.props.currentUser?.name}</span>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                        <Dropdown.Item eventKey={DropdownOptions.PROFILE}><FaUser /> Profile</Dropdown.Item>
+                        <Dropdown.Divider />
+                        <Dropdown.Item eventKey={DropdownOptions.LOGOUT}><FaSignOutAlt /> Log out</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
             </div>
         )
     }
@@ -42,6 +59,19 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
                 this.props.setUser(response.body?.data.Viewer!);
             })
             .catch(err => console.error(err));
+    }
+
+    handleDropdownOnSelect(eventKey: any, event: Object) {
+        switch (eventKey) {
+            case DropdownOptions.PROFILE:
+                console.log("Activated profile");
+                break;
+            case DropdownOptions.LOGOUT:
+                console.log("Activated logout");
+                break;
+            default:
+                break;
+        }
     }
 
     componentDidUpdate(prevProps: UserToolbarProps) {

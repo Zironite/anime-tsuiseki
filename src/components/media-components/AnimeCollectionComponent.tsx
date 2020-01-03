@@ -10,6 +10,7 @@ import { humanMediaFormat } from "../../util/GeneralUtil";
 
 interface Props {
     pageSize: number,
+    userId: string,
     status: GQLMediaListStatus
 }
 interface State {
@@ -26,9 +27,7 @@ class AnimeCollectionComponent extends Component<AnimeCollectionComponentProps, 
     constructor(props: AnimeCollectionComponentProps) {
         super(props);
 
-        if (this.props.pin && this.props.currentUser?.id) {
-            this.getAnimeListPage();
-        }
+        this.getAnimeListPage();
     }
 
     render() {
@@ -81,34 +80,34 @@ class AnimeCollectionComponent extends Component<AnimeCollectionComponentProps, 
     }
 
     componentDidUpdate() {
-        if (this.props.pin && this.props.currentUser?.id) {
-            this.getAnimeListPage();
-        }
+        this.getAnimeListPage();
     }
 
     getAnimeListPage() {
-        const query = this.getAnimeListPageQuery.loc?.source.body;
+        if (this.props.pin && this.props.userId) {
+            const query = this.getAnimeListPageQuery.loc?.source.body;
 
-        type TGQLGetAnimeListPageReturyType = {
-            data: {
-                Page: GQLPage
-            }
-        };
-        queryAniList<TGQLGetAnimeListPageReturyType>(this.props.url as string,
-            this.props.pin as string,
-            query as string,
-            {
-                page: this.state.currPage,
-                perPage: this.props.pageSize,
-                userId: this.props.currentUser?.id,
-                status: this.props.status
-            }).then(response => {
-                this.setState({
-                    pageData: response.body?.data.Page
+            type TGQLGetAnimeListPageReturyType = {
+                data: {
+                    Page: GQLPage
+                }
+            };
+            queryAniList<TGQLGetAnimeListPageReturyType>(this.props.url as string,
+                this.props.pin as string,
+                query as string,
+                {
+                    page: this.state.currPage,
+                    perPage: this.props.pageSize,
+                    userId: this.props.userId,
+                    status: this.props.status
+                }).then(response => {
+                    this.setState({
+                        pageData: response.body?.data.Page
+                    });
+                }).catch(err => {
+                    console.error(err)
                 });
-            }).catch(err => {
-                console.error(err)
-            });
+        }
     }
 }
 

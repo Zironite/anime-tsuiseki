@@ -11,6 +11,7 @@ import UserToolbar from './components/user-components/UserToolbar';
 import ReactModal from 'react-modal';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ProfileView from './components/user-components/ProfileView';
+import AnimeListComponent from './components/media-components/AnimeListComponent';
 
 interface AppComponentState {
   enterPin: boolean
@@ -53,6 +54,9 @@ class App extends Component<AppProps,AppComponentState> {
           <Switch>
             <Route path="/profile/:profileId">
               <ProfileView />
+            </Route>
+            <Route path="/anime/list/:profileId">
+              <AnimeListComponent />
             </Route>
           </Switch>
         </BrowserRouter>

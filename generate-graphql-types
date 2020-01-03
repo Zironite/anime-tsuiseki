@@ -1,0 +1,3 @@
+#!/bin/bash
+./node_modules/.bin/graphql-schema-typescript generate-ts --output src/graphql/graphqlTypes.ts src/graphql/
+sed -i "s/const enum/enum/" src/graphql/graphqlTypes.ts

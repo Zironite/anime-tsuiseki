@@ -1,0 +1,8 @@
+enum MediaListStatus {
+    CURRENT,
+    PLANNING,
+    COMPLETED,
+    DROPPED,
+    PAUSED,
+    REPEATING
+}

@@ -6,7 +6,7 @@ import { loader } from "graphql.macro";
 import { GQLUser } from '../../graphql/graphqlTypes';
 import { ISetUser } from '../../globalState/actions';
 import "./UserToolbar.css";
-import { Dropdown } from "react-bootstrap";
+import { Dropdown, Navbar, Nav } from "react-bootstrap";
 import { FaUser, FaSignOutAlt } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 
@@ -26,23 +26,22 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
 
     render() {
         return (
-            <div className="user-toolbar p-2">
-                <Dropdown onSelect={this.handleDropdownOnSelect}>
-                    <Dropdown.Toggle variant="info" id="user-dropdown">
-                        <img src={this.props.currentUser?.avatar?.medium} className="rounded-circle avatar-img mr-3" />
-                        <span>{this.props.currentUser?.name}</span>
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                        <Dropdown.Item eventKey={DropdownOptions.PROFILE} 
-                            as={Link} 
-                            to={`/profile/${this.props.currentUser?.id}`}>
-                            <FaUser /> Profile
-                        </Dropdown.Item>
-                        <Dropdown.Divider />
-                        <Dropdown.Item eventKey={DropdownOptions.LOGOUT}><FaSignOutAlt /> Log out</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
-            </div>
+            <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                <Navbar.Brand as={Link} to={`/profile/${this.props.currentUser?.id}`}>
+                    <img src={this.props.currentUser?.avatar?.medium} className="rounded-circle avatar-img mr-3" />
+                    <span>{this.props.currentUser?.name}</span>
+                </Navbar.Brand>
+                <Nav className="mr-auto">
+                    <Nav.Link as={Link} to={`/anime/list/${this.props.currentUser?.id}`}>
+                        Anime List
+                    </Nav.Link>
+                </Nav>
+                <Nav>
+                    <Nav.Link>
+                        <FaSignOutAlt /> Log out
+                    </Nav.Link>
+                </Nav>
+            </Navbar>
         )
     }
 

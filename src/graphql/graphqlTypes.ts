@@ -14,6 +14,7 @@ import { GraphQLResolveInfo } from 'graphql';
  *******************************/
 export interface GQLQuery {
   Viewer?: GQLUser;
+  Page?: GQLPage;
 }
 
 export interface GQLUser {
@@ -25,6 +26,31 @@ export interface GQLUser {
 export interface GQLUserAvatar {
   large?: string;
   medium?: string;
+}
+
+export interface GQLPage {
+  mediaList?: Array<GQLMediaList | null>;
+}
+
+export interface GQLMediaList {
+  media?: GQLMedia;
+}
+
+export interface GQLMedia {
+  title?: GQLMediaTitle;
+}
+
+export interface GQLMediaTitle {
+  userPreferred?: string;
+}
+
+export enum GQLMediaListStatus {
+  CURRENT = 'CURRENT',
+  PLANNING = 'PLANNING',
+  COMPLETED = 'COMPLETED',
+  DROPPED = 'DROPPED',
+  PAUSED = 'PAUSED',
+  REPEATING = 'REPEATING'
 }
 
 /*********************************
@@ -41,12 +67,21 @@ export interface GQLResolver {
   Query?: GQLQueryTypeResolver;
   User?: GQLUserTypeResolver;
   UserAvatar?: GQLUserAvatarTypeResolver;
+  Page?: GQLPageTypeResolver;
+  MediaList?: GQLMediaListTypeResolver;
+  Media?: GQLMediaTypeResolver;
+  MediaTitle?: GQLMediaTitleTypeResolver;
 }
 export interface GQLQueryTypeResolver<TParent = any> {
   Viewer?: QueryToViewerResolver<TParent>;
+  Page?: QueryToPageResolver<TParent>;
 }
 
 export interface QueryToViewerResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface QueryToPageResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 
@@ -78,5 +113,37 @@ export interface UserAvatarToLargeResolver<TParent = any, TResult = any> {
 }
 
 export interface UserAvatarToMediumResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface GQLPageTypeResolver<TParent = any> {
+  mediaList?: PageToMediaListResolver<TParent>;
+}
+
+export interface PageToMediaListResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface GQLMediaListTypeResolver<TParent = any> {
+  media?: MediaListToMediaResolver<TParent>;
+}
+
+export interface MediaListToMediaResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface GQLMediaTypeResolver<TParent = any> {
+  title?: MediaToTitleResolver<TParent>;
+}
+
+export interface MediaToTitleResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface GQLMediaTitleTypeResolver<TParent = any> {
+  userPreferred?: MediaTitleToUserPreferredResolver<TParent>;
+}
+
+export interface MediaTitleToUserPreferredResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }

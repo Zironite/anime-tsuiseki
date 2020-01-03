@@ -1,0 +1,3 @@
+type Media {
+    title: MediaTitle
+}

@@ -1,3 +1,4 @@
 type Query {
-    Viewer: User
+    Viewer: User,
+    Page: Page
 }

@@ -1,7 +1,12 @@
 query ($userId: Int, $page: Int, $perPage: Int, $status: MediaListStatus) {
   Page (page: $page, perPage: $perPage) {
     mediaList (userId: $userId, status: $status, type: ANIME) {
+      progress
+      score
     	media {
+        id
+        format
+        episodes
         title {
             userPreferred
         }

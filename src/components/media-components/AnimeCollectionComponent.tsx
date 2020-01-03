@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import { loader } from "graphql.macro";
 import { queryAniList } from '../../util/AniListApiUtil';
 import { GQLPage, GQLMediaListStatus } from '../../graphql/graphqlTypes';
-import { Table } from 'react-bootstrap';
+import { Table, Pagination, ProgressBar } from 'react-bootstrap';
+import './AnimeCollectionComponent.css';
+import { humanMediaFormat } from "../../util/GeneralUtil";
 
 interface Props {
     pageSize: number,
@@ -31,25 +33,51 @@ class AnimeCollectionComponent extends Component<AnimeCollectionComponentProps, 
 
     render() {
         return (
-            <Table striped bordered hover variant="dark">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        this.state.pageData?.mediaList?.map(row => {
-                            return (
-                                <tr>
-                                    <td>{row?.media?.title?.userPreferred}</td>
-                                </tr>
-                            );
-                        })
-                    }
-                </tbody>
-            </Table>
+            <div>
+                <div className="min-height-75vh">
+                    <Table striped bordered hover variant="dark" responsive>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Format</th>
+                                <th>Progress</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                this.state.pageData?.mediaList?.map(row => {
+                                    return (
+                                        <tr key={row?.media?.id}>
+                                            <td>{row?.media?.title?.userPreferred}</td>
+                                            <td>{humanMediaFormat(row?.media?.format)}</td>
+                                            <td>
+                                                <ProgressBar now={(row?.progress && row.media?.episodes) ? 
+                                                    row.progress / row.media.episodes * 100 :
+                                                    0} label={`${row?.progress || 0} / ${row?.media?.episodes || 0}`}
+                                                    className="progress-bar-custom"/>
+                                            </td>
+                                            <td>{row?.score}</td>
+                                        </tr>
+                                    );
+                                })
+                            }
+                        </tbody>
+                    </Table>
+                </div>
+                <Pagination className="justify-content-center">
+                    <Pagination.First />
+                    <Pagination.Prev />
+
+                    <Pagination.Next />
+                    <Pagination.Last />
+                </Pagination>
+            </div>
         )
+    }
+
+    humanReadableFormat() {
+
     }
 
     componentDidUpdate() {
@@ -73,7 +101,7 @@ class AnimeCollectionComponent extends Component<AnimeCollectionComponentProps, 
                 page: this.state.currPage,
                 perPage: this.props.pageSize,
                 userId: this.props.currentUser?.id,
-                status: this.props.status.toString()
+                status: this.props.status
             }).then(response => {
                 this.setState({
                     pageData: response.body?.data.Page

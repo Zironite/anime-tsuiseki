@@ -1,3 +1,5 @@
 type MediaList {
     media: Media
+    progress: Int,
+    score: Int
 }

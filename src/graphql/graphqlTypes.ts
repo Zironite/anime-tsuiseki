@@ -34,14 +34,32 @@ export interface GQLPage {
 
 export interface GQLMediaList {
   media?: GQLMedia;
+  progress?: number;
+  score?: number;
 }
 
 export interface GQLMedia {
+  id: number;
   title?: GQLMediaTitle;
+  format?: GQLMediaFormat;
+  episodes?: number;
 }
 
 export interface GQLMediaTitle {
   userPreferred?: string;
+}
+
+export enum GQLMediaFormat {
+  TV = 'TV',
+  TV_SHORT = 'TV_SHORT',
+  MOVIE = 'MOVIE',
+  SPECIAL = 'SPECIAL',
+  OVA = 'OVA',
+  ONA = 'ONA',
+  MUSIC = 'MUSIC',
+  MANGA = 'MANGA',
+  NOVEL = 'NOVEL',
+  ONE_SHOT = 'ONE_SHOT'
 }
 
 export enum GQLMediaListStatus {
@@ -126,17 +144,42 @@ export interface PageToMediaListResolver<TParent = any, TResult = any> {
 
 export interface GQLMediaListTypeResolver<TParent = any> {
   media?: MediaListToMediaResolver<TParent>;
+  progress?: MediaListToProgressResolver<TParent>;
+  score?: MediaListToScoreResolver<TParent>;
 }
 
 export interface MediaListToMediaResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 
+export interface MediaListToProgressResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface MediaListToScoreResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
 export interface GQLMediaTypeResolver<TParent = any> {
+  id?: MediaToIdResolver<TParent>;
   title?: MediaToTitleResolver<TParent>;
+  format?: MediaToFormatResolver<TParent>;
+  episodes?: MediaToEpisodesResolver<TParent>;
+}
+
+export interface MediaToIdResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 
 export interface MediaToTitleResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface MediaToFormatResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface MediaToEpisodesResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 

@@ -1,10 +1,8 @@
-import logo from './logo.svg';
 import './App.css';
-import React, { Component, Dispatch } from 'react'
-import { ReactReduxContext, connect } from 'react-redux';
-import { AppState, AppStateActionTypes, TReducerActions } from './globalState/rootReducer';
+import React, { Component } from 'react'
+import { connect } from 'react-redux';
+import { AppState, AppStateActionTypes } from './globalState/rootReducer';
 import { ISetPin, IInitConfigDb, ILoadConfigFromDb } from './globalState/actions';
-import { ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { ConfigEntry } from './dm/ConfigEntry';
 import UserToolbar from './components/user-components/UserToolbar';
@@ -40,6 +38,7 @@ class App extends Component<AppProps,AppComponentState> {
               <a className="btn btn-primary" 
                 href={`https://anilist.co/api/v2/oauth/authorize?client_id=${this.props.clientId}&response_type=token`}
                 target="_blank"
+                rel="noopener noreferrer"
                 onClick={this.enablePinTextBox}>
                 Login
               </a>

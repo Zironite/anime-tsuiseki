@@ -1,0 +1,8 @@
+.min-height-75vh {
+    min-height: 75vh;
+}
+
+.progress-bar-custom .progress-bar {
+    color: #222222;
+    overflow: visible;
+}

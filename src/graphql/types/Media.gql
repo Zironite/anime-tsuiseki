@@ -1,3 +1,6 @@
 type Media {
+    id: Int!
     title: MediaTitle
+    format: MediaFormat,
+    episodes: Int
 }

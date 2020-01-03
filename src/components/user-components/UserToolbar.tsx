@@ -6,8 +6,8 @@ import { loader } from "graphql.macro";
 import { GQLUser } from '../../graphql/graphqlTypes';
 import { ISetUser } from '../../globalState/actions';
 import "./UserToolbar.css";
-import { Dropdown, Navbar, Nav } from "react-bootstrap";
-import { FaUser, FaSignOutAlt } from "react-icons/fa";
+import { Navbar, Nav } from "react-bootstrap";
+import { FaSignOutAlt } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 
 enum DropdownOptions {
@@ -28,7 +28,9 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
         return (
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
                 <Navbar.Brand as={Link} to={`/profile/${this.props.currentUser?.id}`}>
-                    <img src={this.props.currentUser?.avatar?.medium} className="rounded-circle avatar-img mr-3" />
+                    <img src={this.props.currentUser?.avatar?.medium} 
+                        alt="Avatar"
+                        className="rounded-circle avatar-img mr-3" />
                     <span>{this.props.currentUser?.name}</span>
                 </Navbar.Brand>
                 <Nav className="mr-auto">
@@ -65,7 +67,7 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
             .catch(err => console.error(err));
     }
 
-    handleDropdownOnSelect(eventKey: any, event: Object) {
+    handleDropdownOnSelect(eventKey: any) {
         switch (eventKey) {
             case DropdownOptions.PROFILE:
                 console.log("Activated profile");

@@ -30,6 +30,7 @@ export interface GQLUserAvatar {
 
 export interface GQLPage {
   mediaList?: Array<GQLMediaList | null>;
+  pageInfo?: GQLPageInfo;
 }
 
 export interface GQLMediaList {
@@ -62,6 +63,14 @@ export enum GQLMediaFormat {
   ONE_SHOT = 'ONE_SHOT'
 }
 
+export interface GQLPageInfo {
+  total?: number;
+  perPage?: number;
+  currentPage?: number;
+  lastPage?: number;
+  hasNextPage?: boolean;
+}
+
 export enum GQLMediaListStatus {
   CURRENT = 'CURRENT',
   PLANNING = 'PLANNING',
@@ -89,6 +98,7 @@ export interface GQLResolver {
   MediaList?: GQLMediaListTypeResolver;
   Media?: GQLMediaTypeResolver;
   MediaTitle?: GQLMediaTitleTypeResolver;
+  PageInfo?: GQLPageInfoTypeResolver;
 }
 export interface GQLQueryTypeResolver<TParent = any> {
   Viewer?: QueryToViewerResolver<TParent>;
@@ -136,9 +146,14 @@ export interface UserAvatarToMediumResolver<TParent = any, TResult = any> {
 
 export interface GQLPageTypeResolver<TParent = any> {
   mediaList?: PageToMediaListResolver<TParent>;
+  pageInfo?: PageToPageInfoResolver<TParent>;
 }
 
 export interface PageToMediaListResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface PageToPageInfoResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 
@@ -188,5 +203,33 @@ export interface GQLMediaTitleTypeResolver<TParent = any> {
 }
 
 export interface MediaTitleToUserPreferredResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface GQLPageInfoTypeResolver<TParent = any> {
+  total?: PageInfoToTotalResolver<TParent>;
+  perPage?: PageInfoToPerPageResolver<TParent>;
+  currentPage?: PageInfoToCurrentPageResolver<TParent>;
+  lastPage?: PageInfoToLastPageResolver<TParent>;
+  hasNextPage?: PageInfoToHasNextPageResolver<TParent>;
+}
+
+export interface PageInfoToTotalResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface PageInfoToPerPageResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface PageInfoToCurrentPageResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface PageInfoToLastPageResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface PageInfoToHasNextPageResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }

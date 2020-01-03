@@ -12,5 +12,6 @@ query ($userId: Int, $page: Int, $perPage: Int, $status: MediaListStatus) {
         }
     	}
   	}
+    pageInfo
   }
 }

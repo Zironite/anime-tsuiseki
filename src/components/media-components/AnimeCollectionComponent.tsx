@@ -28,9 +28,27 @@ class AnimeCollectionComponent extends Component<AnimeCollectionComponentProps, 
         super(props);
 
         this.getAnimeListPage();
+        this.handlePageClick = this.handlePageClick.bind(this);
     }
 
     render() {
+        let firstAndPrevPagination: JSX.Element | undefined;
+        let lastAndNextPagination: JSX.Element | undefined;
+
+        if (this.state.currPage !== 0) {
+            firstAndPrevPagination = 
+                <React.Fragment>
+                    
+                </React.Fragment>;
+        }
+
+        if (this.state.currPage !== this.state.pageData?.pageInfo?.lastPage) {
+            lastAndNextPagination =
+                <React.Fragment>
+                    
+                </React.Fragment>
+        }
+
         return (
             <div>
                 <div className="min-height-75vh">
@@ -65,22 +83,26 @@ class AnimeCollectionComponent extends Component<AnimeCollectionComponentProps, 
                     </Table>
                 </div>
                 <Pagination className="justify-content-center">
-                    <Pagination.First />
-                    <Pagination.Prev />
+                    <Pagination.First onClick={() => this.handlePageClick(1)} disabled={this.state.currPage === 0} />
+                    <Pagination.Prev onClick={() => this.handlePageClick(this.state.currPage - 1)} disabled={this.state.currPage === 0} />
 
-                    <Pagination.Next />
-                    <Pagination.Last />
+
+                    <Pagination.Next key="next" onClick={() => this.handlePageClick(this.state.currPage + 1)}
+                        disabled={this.state.currPage === this.state.pageData?.pageInfo?.lastPage} />
+                    <Pagination.Last key="last" onClick={() => this.handlePageClick(this.state.pageData?.pageInfo?.lastPage)}
+                        disabled={this.state.currPage === this.state.pageData?.pageInfo?.lastPage}/>
                 </Pagination>
             </div>
         )
     }
-
-    humanReadableFormat() {
-
-    }
-
-    componentDidUpdate() {
-        this.getAnimeListPage();
+    
+    componentDidUpdate(prevProps: AnimeCollectionComponentProps, prevState: State) {
+        if (prevState.currPage !== this.state.currPage ||
+            prevProps.currentUser?.id !== this.props.currentUser?.id ||
+            prevProps.pageSize !== this.props.pageSize ||
+            prevProps.pin !== this.props.pin) {
+            this.getAnimeListPage();
+        }
     }
 
     getAnimeListPage() {
@@ -108,6 +130,10 @@ class AnimeCollectionComponent extends Component<AnimeCollectionComponentProps, 
                     console.error(err)
                 });
         }
+    }
+
+    handlePageClick(newPage?: number) {
+        console.log(newPage);
     }
 }
 

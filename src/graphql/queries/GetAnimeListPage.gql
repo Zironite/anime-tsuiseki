@@ -12,6 +12,12 @@ query ($userId: Int, $page: Int, $perPage: Int, $status: MediaListStatus) {
         }
     	}
   	}
-    pageInfo
+    pageInfo {
+      total
+      perPage
+      currentPage
+      lastPage
+      hasNextPage
+    }
   }
 }

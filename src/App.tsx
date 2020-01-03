@@ -54,8 +54,8 @@ class App extends Component<AppProps,AppComponentState> {
             <Route path="/profile/:profileId">
               <ProfileView />
             </Route>
-            <Route path="/anime/list/:userId" pageSize="10">
-              <AnimeListComponent />
+            <Route path="/anime/list/:userId">
+              <AnimeListComponent pageSize={10}/>
             </Route>
           </Switch>
         </BrowserRouter>

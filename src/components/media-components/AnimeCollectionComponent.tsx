@@ -23,7 +23,10 @@ class AnimeCollectionComponent extends Component<AnimeCollectionComponentProps, 
 
     constructor(props: AnimeCollectionComponentProps) {
         super(props);
-        this.getAnimeListPage();
+
+        if (this.props.pin && this.props.currentUser?.id) {
+            this.getAnimeListPage();
+        }
     }
 
     render() {
@@ -34,17 +37,25 @@ class AnimeCollectionComponent extends Component<AnimeCollectionComponentProps, 
                         <th>Name</th>
                     </tr>
                 </thead>
-                {
-                    this.state.pageData?.mediaList?.map(row => {
-                        return (
-                            <tr>
-                                <td>{row?.media?.title?.userPreferred}</td>
-                            </tr>
-                        );
-                    })
-                }
+                <tbody>
+                    {
+                        this.state.pageData?.mediaList?.map(row => {
+                            return (
+                                <tr>
+                                    <td>{row?.media?.title?.userPreferred}</td>
+                                </tr>
+                            );
+                        })
+                    }
+                </tbody>
             </Table>
         )
+    }
+
+    componentDidUpdate() {
+        if (this.props.pin && this.props.currentUser?.id) {
+            this.getAnimeListPage();
+        }
     }
 
     getAnimeListPage() {
@@ -54,7 +65,7 @@ class AnimeCollectionComponent extends Component<AnimeCollectionComponentProps, 
             data: {
                 Page: GQLPage
             }
-        }
+        };
         queryAniList<TGQLGetAnimeListPageReturyType>(this.props.url as string,
             this.props.pin as string,
             query as string,
@@ -62,10 +73,14 @@ class AnimeCollectionComponent extends Component<AnimeCollectionComponentProps, 
                 page: this.state.currPage,
                 perPage: this.props.pageSize,
                 userId: this.props.currentUser?.id,
-                status: this.props.status
+                status: this.props.status.toString()
             }).then(response => {
-                this.state.pageData = response.body?.data.Page;
-            }).catch(err => console.error(err));
+                this.setState({
+                    pageData: response.body?.data.Page
+                });
+            }).catch(err => {
+                console.error(err)
+            });
     }
 }
 

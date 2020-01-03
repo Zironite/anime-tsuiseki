@@ -9,6 +9,7 @@ module.exports = {
             body: body
         }, (err,response,body) => {
             electronEvent.reply('asynchronous-reply', {
+                request_id: electronEvent.tsuiseki_request_id,
                 err: err,
                 response: response,
                 body: body

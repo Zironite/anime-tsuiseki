@@ -1,20 +1,27 @@
+import * as uuid from 'uuid';
+
 const { ipcRenderer } = window.require('electron');
 
 export function queryAniList<TSuccess>(url:string, pin: string, query: string, variables?: any) {
+    const request_id = uuid.v4();
     const promise: Promise<{ body?: TSuccess, response?: any } & { err?: any }> = new Promise((resolve,reject) => {
         ipcRenderer.on('asynchronous-reply', (event, arg) => {
-            if (arg.err) {
-                reject({
-                    err: arg.err
-                });
-            } else {
-                resolve({
-                    body: JSON.parse(arg.body) as TSuccess,
-                    response: arg.response
-                });
+            if (arg.request_id === request_id) {
+                if (arg.err) {
+                    reject({
+                        err: arg.err
+                    });
+                } else {
+                    resolve({
+                        body: JSON.parse(arg.body) as TSuccess,
+                        response: arg.response
+                    });
+                }
             }
         });
         ipcRenderer.send('asynchronous-message', { 
+            request_id: request_id,
+            type: 'queryAniList',
             url: url, 
             method: 'POST', 
             headers: {

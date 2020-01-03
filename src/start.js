@@ -13,9 +13,7 @@ function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true,
-      webSecurity: false,
-      allowRunningInsecureContent: false
+      nodeIntegration: true
     }
   });
 
@@ -50,5 +48,12 @@ app.on('activate', () => {
 });
 
 electron.ipcMain.on('asynchronous-message', (e,arg) => {
-  electronNodeUtil.queryAniList(arg.url, arg.method, arg.headers, arg.body, e);
+  e.tsuiseki_request_id = arg.request_id;
+  switch (arg.type) {
+    case 'queryAniList':
+      electronNodeUtil.queryAniList(arg.url, arg.method, arg.headers, arg.body, e);
+      break;
+    default:
+      break;
+  }
 })

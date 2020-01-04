@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import { loader } from "graphql.macro";
 import { queryAniList } from '../../util/AniListApiUtil';
 import { GQLPage, GQLMediaListStatus } from '../../graphql/graphqlTypes';
-import { Table, Pagination, ProgressBar } from 'react-bootstrap';
+import { Table, ProgressBar } from 'react-bootstrap';
 import './AnimeCollectionComponent.css';
 import { humanMediaFormat } from "../../util/GeneralUtil";
+import PaginationComponent from '../general/PaginationComponent';
 
 interface Props {
     pageSize: number,
@@ -28,7 +29,7 @@ class AnimeCollectionComponent extends Component<AnimeCollectionComponentProps, 
         super(props);
 
         this.getAnimeListPage();
-        this.handlePageClick = this.handlePageClick.bind(this);
+        this.onPageSelect = this.onPageSelect.bind(this);
     }
 
     render() {
@@ -82,16 +83,9 @@ class AnimeCollectionComponent extends Component<AnimeCollectionComponentProps, 
                         </tbody>
                     </Table>
                 </div>
-                <Pagination className="justify-content-center">
-                    <Pagination.First onClick={() => this.handlePageClick(1)} disabled={this.state.currPage === 0} />
-                    <Pagination.Prev onClick={() => this.handlePageClick(this.state.currPage - 1)} disabled={this.state.currPage === 0} />
-
-
-                    <Pagination.Next key="next" onClick={() => this.handlePageClick(this.state.currPage + 1)}
-                        disabled={this.state.currPage === this.state.pageData?.pageInfo?.lastPage} />
-                    <Pagination.Last key="last" onClick={() => this.handlePageClick(this.state.pageData?.pageInfo?.lastPage)}
-                        disabled={this.state.currPage === this.state.pageData?.pageInfo?.lastPage}/>
-                </Pagination>
+                <PaginationComponent lastPage={this.state.pageData?.pageInfo?.lastPage || 0} 
+                    onSelect={this.onPageSelect} 
+                    displayedPageNums={5} />
             </div>
         )
     }
@@ -132,8 +126,8 @@ class AnimeCollectionComponent extends Component<AnimeCollectionComponentProps, 
         }
     }
 
-    handlePageClick(newPage?: number) {
-        console.log(newPage);
+    onPageSelect(page: number) {
+
     }
 }
 

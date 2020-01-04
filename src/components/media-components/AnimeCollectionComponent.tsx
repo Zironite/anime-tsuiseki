@@ -21,7 +21,7 @@ interface State {
 
 class AnimeCollectionComponent extends Component<AnimeCollectionComponentProps, State> {
     state: State = {
-        currPage: 0
+        currPage: 1
     }
     getAnimeListPageQuery = loader("../../graphql/queries/GetAnimeListPage.gql");
 
@@ -127,7 +127,9 @@ class AnimeCollectionComponent extends Component<AnimeCollectionComponentProps, 
     }
 
     onPageSelect(page: number) {
-
+        this.setState({
+            currPage: page
+        });
     }
 }
 

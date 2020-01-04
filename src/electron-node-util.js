@@ -3,7 +3,7 @@ const exec = require("child_process").exec;
 const psList = require("ps-list");
 
 const monitorProcessesConfig = {
-    commands: ["vlc"],
+    commands: [],
     extensions: [".mkv",".mp4",".avi"]
 }
 

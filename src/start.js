@@ -53,6 +53,9 @@ electron.ipcMain.on('asynchronous-message', (e,arg) => {
     case 'queryAniList':
       electronNodeUtil.queryAniList(arg.url, arg.method, arg.headers, arg.body, e);
       break;
+    case 'setProcessCommandsToMonitor':
+      electronNodeUtil.setProcessCommandsToMonitor(arg.commands);
+      break;
     default:
       break;
   }

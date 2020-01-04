@@ -10,6 +10,7 @@ import ReactModal from 'react-modal';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ProfileView from './components/user-components/ProfileView';
 import AnimeListComponent from './components/media-components/AnimeListComponent';
+import { setProcessCommandsToMonitor } from './util/MainProcessCommunicationUtil';
 
 interface AppComponentState {
   enterPin: boolean
@@ -21,6 +22,7 @@ class App extends Component<AppProps,AppComponentState> {
     this.state = {
       enterPin: false
     };
+    setProcessCommandsToMonitor(["vlc"]);
     this.props.initConfigDb();
     console.log(this.props);
     this.enablePinTextBox = this.enablePinTextBox.bind(this);

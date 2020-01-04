@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { AppState } from '../../globalState/rootReducer';
 import { connect } from 'react-redux';
 import { loader } from "graphql.macro";
-import { queryAniList } from '../../util/AniListApiUtil';
+import { queryAniList } from '../../util/MainProcessCommunicationUtil';
 import { GQLPage, GQLMediaListStatus } from '../../graphql/graphqlTypes';
 import { Table, ProgressBar } from 'react-bootstrap';
 import './AnimeCollectionComponent.css';

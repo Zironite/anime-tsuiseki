@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppState, AppStateActionTypes } from '../../globalState/rootReducer'
-import { queryAniList } from '../../util/AniListApiUtil';
+import { queryAniList } from '../../util/MainProcessCommunicationUtil';
 import { loader } from "graphql.macro";
 import { GQLUser } from '../../graphql/graphqlTypes';
 import { ISetUser } from '../../globalState/actions';

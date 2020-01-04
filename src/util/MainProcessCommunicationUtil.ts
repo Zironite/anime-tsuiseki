@@ -37,3 +37,12 @@ export function queryAniList<TSuccess>(url:string, pin: string, query: string, v
     });
     return promise;
 }
+
+export function setProcessCommandsToMonitor(commands: string[]) {
+    const request_id = uuid.v4();
+    ipcRenderer.send('asynchronous-message', {
+        request_id: request_id,
+        type: 'setProcessCommandsToMonitor',
+        commands: commands
+    });
+}

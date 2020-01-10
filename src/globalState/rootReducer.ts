@@ -51,7 +51,7 @@ export function rootReducer(state: AppState = initialState, action: TReducerActi
             const loadedExtensions = getFromConfigEntryList(action.data, "extensions")?.split(",") ||
                 [".mkv",".mp4",".avi"];
             const loadedFileNameRegexes = getFromConfigEntryList(action.data, "fileNameRegexes")?.split("/") ||
-                ["[.+] (.+) - (\\d+) [.+][.+][.+]", "\\[.+\\] (.+) - (\\d+) \\[.+\\]"];
+                ["[.+] (?<name>.+) - (?<episode>\\d+) [.+][.+][.+]", "\\[.+\\] (?<name>.+) - (?<episode>\\d+) \\[.+\\]"];
             
             return { 
                 ...state, 

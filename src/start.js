@@ -68,5 +68,5 @@ electron.ipcMain.on('asynchronous-message', (e,arg) => {
 });
 
 setInterval(() => {
-  electronNodeUtil.monitorProcesses();
+  electronNodeUtil.monitorProcesses(mainWindow.webContents);
 }, 1000);

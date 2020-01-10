@@ -1,6 +1,11 @@
 import * as uuid from 'uuid';
+import { ProcessMonitorMessage } from '../dm/ProcessMonitorMessage';
 
 const { ipcRenderer } = window.require('electron');
+
+ipcRenderer.on("process-monitor", (e,message: ProcessMonitorMessage) => {
+    console.log(message);
+})
 
 export function queryAniList<TSuccess>(url:string, pin: string, query: string, variables?: any) {
     const request_id = uuid.v4();

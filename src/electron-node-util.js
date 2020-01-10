@@ -33,7 +33,7 @@ module.exports = {
     setFileNameRegexes: (value) => {
         monitorProcessesConfig.fileNameRegexes = value.map(r => new RegExp(r));
     },
-    monitorProcesses: () => {
+    monitorProcesses: (webContents) => {
         psList().then((response) => {
             const relevantProcesses = response.filter(p => monitorProcessesConfig.commands.find(c => c === p.name));
             relevantProcesses.forEach(p => {
@@ -49,7 +49,12 @@ module.exports = {
                             const element = monitorProcessesConfig.fileNameRegexes[i];
                             
                             const extractedGroups = fileName.match(element);
-                            console.log(extractedGroups);
+                            if (extractedGroups) {
+                                webContents.send("process-monitor", {
+                                    name: extractedGroups.groups.name,
+                                    episode: parseInt(extractedGroups.groups.episode || 0)
+                                });
+                            }
                         }
                     });
                 });

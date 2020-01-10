@@ -9,7 +9,7 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from "redux-thunk";
 
-const store = createStore(rootReducer, initialState, applyMiddleware(thunk));
+export const store = createStore(rootReducer, initialState, applyMiddleware(thunk));
 ReactDOM.render(
     <Provider store={store}>
         <App />
@@ -19,3 +19,4 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
+

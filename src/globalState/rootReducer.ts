@@ -1,8 +1,8 @@
-import { IInitConfigDb, ISetPin, ILoadConfigFromDb, ISetUser, ISetCommands, ISetExtensions, ISetFileNameRegexes, IInitMediaSearchIndex } from "./actions";
+import { IInitConfigDb, ISetPin, ILoadConfigFromDb, ISetUser, ISetCommands, ISetExtensions, ISetFileNameRegexes, IInitMediaSearchIndex, ISetCurrentOpenAnime } from "./actions";
 import { ConfigEntry, getFromConfigEntryList } from "../dm/ConfigEntry";
 import PouchDb from "pouchdb-browser";
 import upsertPlugin from "pouchdb-upsert";
-import { GQLUser } from "../graphql/graphqlTypes";
+import { GQLUser, GQLMedia } from "../graphql/graphqlTypes";
 import IndexContainer from "../util/IndexContainer";
 import { MediaSearchIndexEntry, mediaSearchIndexEntryFields } from "../dm/MediaSearchIndexEntry";
 
@@ -22,7 +22,7 @@ export enum AppStateActionTypes {
     SET_COMMANDS,
     SET_EXTENSIONS,
     SET_FILENAME_REGEXES,
-    ADD_MEDIA_SEARCH_INDEX_ENTRIES
+    SET_CURRENT_OPEN_ANIME
 }
 
 export interface IAppStateBaseAction {
@@ -38,11 +38,12 @@ export interface AppState {
     commands?: string[],
     extensions?: string[],
     fileNameRegexes?: string[],
-    mediaSearchIndex?: IndexContainer<MediaSearchIndexEntry>
+    mediaSearchIndex?: IndexContainer<MediaSearchIndexEntry>,
+    currentOpenAnime?: GQLMedia
 }
 
 export type TReducerActions = IInitConfigDb | IInitMediaSearchIndex | ISetPin | ILoadConfigFromDb | ISetUser | ISetCommands |
-    ISetExtensions | ISetFileNameRegexes
+    ISetExtensions | ISetFileNameRegexes | ISetCurrentOpenAnime
 export function rootReducer(state: AppState = initialState, action: TReducerActions): AppState {
     switch(action.type) {
         case AppStateActionTypes.INIT_CONFIG_DB:
@@ -105,6 +106,8 @@ export function rootReducer(state: AppState = initialState, action: TReducerActi
                 return diffDoc as ConfigEntry;
             });
             return { ...state, fileNameRegexes: action.fileNameRegexes };
+        case AppStateActionTypes.SET_CURRENT_OPEN_ANIME:
+            return { ...state, currentOpenAnime: action.anime }
         default:
             return state;
     }

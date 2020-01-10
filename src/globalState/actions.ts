@@ -1,6 +1,6 @@
 import { IAppStateBaseAction, AppStateActionTypes } from "./rootReducer";
 import { ConfigEntry } from "../dm/ConfigEntry";
-import { GQLUser } from "../graphql/graphqlTypes";
+import { GQLUser, GQLMedia } from "../graphql/graphqlTypes";
 import { MediaSearchIndexEntry } from "../dm/MediaSearchIndexEntry";
 
 export interface IInitConfigDb extends IAppStateBaseAction {
@@ -40,4 +40,9 @@ export interface ISetExtensions extends IAppStateBaseAction {
 export interface ISetFileNameRegexes extends IAppStateBaseAction {
     type: AppStateActionTypes.SET_FILENAME_REGEXES,
     fileNameRegexes: string[]
+}
+
+export interface ISetCurrentOpenAnime extends IAppStateBaseAction {
+    type: AppStateActionTypes.SET_CURRENT_OPEN_ANIME,
+    anime: GQLMedia
 }

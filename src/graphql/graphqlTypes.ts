@@ -15,6 +15,7 @@ import { GraphQLResolveInfo } from 'graphql';
 export interface GQLQuery {
   Viewer?: GQLUser;
   Page?: GQLPage;
+  Media?: GQLMedia;
 }
 
 export interface GQLUser {
@@ -103,6 +104,7 @@ export interface GQLResolver {
 export interface GQLQueryTypeResolver<TParent = any> {
   Viewer?: QueryToViewerResolver<TParent>;
   Page?: QueryToPageResolver<TParent>;
+  Media?: QueryToMediaResolver<TParent>;
 }
 
 export interface QueryToViewerResolver<TParent = any, TResult = any> {
@@ -110,6 +112,10 @@ export interface QueryToViewerResolver<TParent = any, TResult = any> {
 }
 
 export interface QueryToPageResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface QueryToMediaResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 

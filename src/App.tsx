@@ -11,7 +11,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ProfileView from './components/user-components/ProfileView';
 import AnimeListComponent from './components/media-components/AnimeListComponent';
 import { setProcessCommandsToMonitor, setAcceptedExtensions, setFileNameRegexes, queryAniList } from './util/MainProcessCommunicationUtil';
-import { GQLMedia, GQLMediaList, GQLPage, GQLMediaListStatus } from './graphql/graphqlTypes';
+import { GQLMediaList, GQLPage, GQLMediaListStatus } from './graphql/graphqlTypes';
 import { loader } from "graphql.macro";
 import { MediaSearchIndexEntry } from './dm/MediaSearchIndexEntry';
 

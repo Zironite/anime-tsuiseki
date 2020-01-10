@@ -22,10 +22,6 @@ class App extends Component<AppProps,AppComponentState> {
     this.state = {
       enterPin: false
     };
-    setProcessCommandsToMonitor(["vlc"]); // TODO : make this configurable
-    setAcceptedExtensions([".mkv",".mp4",".avi"]) // TODO : make this configurable
-    setFileNameRegexes(["[.+] (.+) - (\\d+) [.+][.+][.+]",
-      "\\[.+\\] (.+) - (\\d+) \\[.+\\]"]); // TODO : make this configurable
     this.props.initConfigDb();
     console.log(this.props);
     this.enablePinTextBox = this.enablePinTextBox.bind(this);
@@ -90,6 +86,15 @@ class App extends Component<AppProps,AppComponentState> {
       this.props.loadConfigFromDb(() => {
         return this.props.configDb;
       });
+    } 
+    if (this.props.commands !== prevProps.commands) {
+      setProcessCommandsToMonitor(this.props.commands!);
+    }
+    if (this.props.extensions !== prevProps.extensions) {
+      setAcceptedExtensions(this.props.extensions!);
+    } 
+    if (this.props.fileNameRegexes !== prevProps.fileNameRegexes) {
+      setFileNameRegexes(this.props.fileNameRegexes!);
     }
   }
 }
@@ -97,7 +102,10 @@ class App extends Component<AppProps,AppComponentState> {
 const mapStateToProps = (state: AppState) => ({
   configDb: state.configDb,
   pin: state.pin,
-  clientId: state.clientId
+  clientId: state.clientId,
+  commands: state.commands,
+  extensions: state.extensions,
+  fileNameRegexes: state.fileNameRegexes
 })
 const initConfigDb = () => {
   return {

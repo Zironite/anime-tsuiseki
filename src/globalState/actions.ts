@@ -20,3 +20,18 @@ export interface ISetUser extends IAppStateBaseAction {
     type: AppStateActionTypes.SET_USER,
     user: GQLUser
 }
+
+export interface ISetCommands extends IAppStateBaseAction {
+    type: AppStateActionTypes.SET_COMMANDS,
+    commands: string[]
+}
+
+export interface ISetExtensions extends IAppStateBaseAction {
+    type: AppStateActionTypes.SET_EXTENSIONS,
+    extensions: string[]
+}
+
+export interface ISetFileNameRegexes extends IAppStateBaseAction {
+    type: AppStateActionTypes.SET_FILENAME_REGEXES,
+    fileNameRegexes: string[]
+}

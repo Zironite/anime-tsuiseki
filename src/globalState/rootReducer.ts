@@ -1,5 +1,5 @@
-import { IInitConfigDb, ISetPin, ILoadConfigFromDb, ISetUser } from "./actions";
-import { ConfigEntry } from "../dm/ConfigEntry";
+import { IInitConfigDb, ISetPin, ILoadConfigFromDb, ISetUser, ISetCommands, ISetExtensions, ISetFileNameRegexes } from "./actions";
+import { ConfigEntry, getFromConfigEntryList } from "../dm/ConfigEntry";
 import PouchDb from "pouchdb-browser";
 import upsertPlugin from "pouchdb-upsert";
 import { GQLUser } from "../graphql/graphqlTypes";
@@ -12,7 +12,10 @@ export enum AppStateActionTypes {
     INIT_CONFIG_DB,
     SET_PIN,
     LOAD_CONFIG_FROM_DB,
-    SET_USER
+    SET_USER,
+    SET_COMMANDS,
+    SET_EXTENSIONS,
+    SET_FILENAME_REGEXES
 }
 
 export interface IAppStateBaseAction {
@@ -24,10 +27,14 @@ export interface AppState {
     pin?: string,
     anilistApi?: string,
     clientId?: number,
-    currentUser?: GQLUser
+    currentUser?: GQLUser,
+    commands?: string[],
+    extensions?: string[],
+    fileNameRegexes?: string[]
 }
 
-export type TReducerActions = IInitConfigDb | ISetPin | ILoadConfigFromDb | ISetUser
+export type TReducerActions = IInitConfigDb | ISetPin | ILoadConfigFromDb | ISetUser | ISetCommands |
+    ISetExtensions | ISetFileNameRegexes
 export function rootReducer(state: AppState = initialState, action: TReducerActions): AppState {
     switch(action.type) {
         case AppStateActionTypes.INIT_CONFIG_DB:
@@ -38,14 +45,21 @@ export function rootReducer(state: AppState = initialState, action: TReducerActi
             return { ...state, configDb: newDb, pin: "" };
         case AppStateActionTypes.LOAD_CONFIG_FROM_DB:
             console.log(action.data);
-            const loadedPin = action.data.find(entry => entry._id === "pin")?.value;
-
-            if (loadedPin) {
-                console.log("Found a pin locally");
-            } else {
-                console.log("Could not find a pin locally");
-            }
-            return { ...state, pin: loadedPin };
+            const loadedPin = getFromConfigEntryList(action.data, "pin");
+            const loadedCommands = getFromConfigEntryList(action.data, "commands")?.split(",") || 
+                ["vlc"];
+            const loadedExtensions = getFromConfigEntryList(action.data, "extensions")?.split(",") ||
+                [".mkv",".mp4",".avi"];
+            const loadedFileNameRegexes = getFromConfigEntryList(action.data, "fileNameRegexes")?.split("/") ||
+                ["[.+] (.+) - (\\d+) [.+][.+][.+]", "\\[.+\\] (.+) - (\\d+) \\[.+\\]"];
+            
+            return { 
+                ...state, 
+                pin: loadedPin, 
+                commands: loadedCommands, 
+                extensions: loadedExtensions,
+                fileNameRegexes: loadedFileNameRegexes
+            };
         case AppStateActionTypes.SET_PIN:
             state.configDb?.upsert("pin", (diffDoc) => {
                 diffDoc.value = action.newPin;
@@ -59,6 +73,26 @@ export function rootReducer(state: AppState = initialState, action: TReducerActi
             return { ...state, pin: action.newPin };
         case AppStateActionTypes.SET_USER:
             return { ...state, currentUser: action.user};
+        case AppStateActionTypes.SET_COMMANDS:
+            state.configDb?.upsert("commands", (diffDoc) => {
+                diffDoc.value = action.commands.join(",");
+                return diffDoc as ConfigEntry
+            });
+            return { ...state, commands: action.commands };
+        case AppStateActionTypes.SET_EXTENSIONS:
+            state.configDb?.upsert("extensions", (diffDoc) => {
+                diffDoc.value = action.extensions.join(",");
+
+                return diffDoc as ConfigEntry;
+            });
+            return { ...state, extensions: action.extensions }
+        case AppStateActionTypes.SET_FILENAME_REGEXES:
+            state.configDb?.upsert("fileNameRegexes", (diffDoc) => {
+                diffDoc.value = action.fileNameRegexes.join("/");
+
+                return diffDoc as ConfigEntry;
+            });
+            return { ...state, fileNameRegexes: action.fileNameRegexes };
         default:
             return state;
     }

@@ -144,6 +144,14 @@ class App extends Component<AppProps,AppComponentState> {
     if (this.props.currentUser !== prevProps.currentUser) {
       this.loadCurrentUserAnime();
     }
+    if (this.props.currentOpenAnime !== prevProps.currentOpenAnime) {
+      const notificationTitle = this.props.currentOpenAnime?.name;
+      if (notificationTitle) {
+        new Notification(notificationTitle!, {
+          body: `Now watching episode ${this.props.currentOpenAnime?.currentEpisode}`
+        });
+      }
+    }
   }
 }
 
@@ -155,7 +163,8 @@ const mapStateToProps = (state: AppState) => ({
   extensions: state.extensions,
   fileNameRegexes: state.fileNameRegexes,
   currentUser: state.currentUser,
-  url: state.anilistApi
+  url: state.anilistApi,
+  currentOpenAnime: state.currentOpenAnime
 })
 const initConfigDb = () => {
   return {

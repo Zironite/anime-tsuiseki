@@ -4,6 +4,7 @@ import { store } from "../index";
 import { GQLMedia, GQLQuery } from '../graphql/graphqlTypes';
 import { loader } from 'graphql.macro';
 import { AppStateActionTypes } from '../globalState/rootReducer';
+import { CurrentOpenAnime } from '../dm/CurrentWatchedAnime';
 
 const { ipcRenderer } = window.require('electron');
 const query = loader("../graphql/queries/GetAnimeById.gql");
@@ -12,7 +13,8 @@ ipcRenderer.on("process-monitor", (e,message: ProcessMonitorMessage) => {
     const queryResult = currentState.mediaSearchIndex?.search(message.name);
     
     if ((queryResult?.length || 0) > 0 && currentState.anilistApi && currentState.pin &&
-        queryResult![0].key !== currentState.currentOpenAnime?.id) {
+        (queryResult![0].key !== currentState.currentOpenAnime?.id || 
+            message.episode !== currentState.currentOpenAnime?.currentEpisode)) {
         type IGetAnimeById = {
             data: GQLQuery
         }
@@ -24,7 +26,11 @@ ipcRenderer.on("process-monitor", (e,message: ProcessMonitorMessage) => {
             }).then(response => {
                 store.dispatch({
                     type: AppStateActionTypes.SET_CURRENT_OPEN_ANIME,
-                    anime: response.body?.data.Media!
+                    anime: {
+                        id: response.body?.data.Media?.id!,
+                        name: response.body?.data.Media?.title?.userPreferred!,
+                        currentEpisode: message.episode
+                    } as CurrentOpenAnime
                 });
             }).catch(err => console.log(err));
     }

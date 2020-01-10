@@ -2,6 +2,7 @@ import { IAppStateBaseAction, AppStateActionTypes } from "./rootReducer";
 import { ConfigEntry } from "../dm/ConfigEntry";
 import { GQLUser, GQLMedia } from "../graphql/graphqlTypes";
 import { MediaSearchIndexEntry } from "../dm/MediaSearchIndexEntry";
+import { CurrentOpenAnime } from "../dm/CurrentWatchedAnime";
 
 export interface IInitConfigDb extends IAppStateBaseAction {
     type: AppStateActionTypes.INIT_CONFIG_DB
@@ -44,5 +45,5 @@ export interface ISetFileNameRegexes extends IAppStateBaseAction {
 
 export interface ISetCurrentOpenAnime extends IAppStateBaseAction {
     type: AppStateActionTypes.SET_CURRENT_OPEN_ANIME,
-    anime: GQLMedia
+    anime: CurrentOpenAnime
 }

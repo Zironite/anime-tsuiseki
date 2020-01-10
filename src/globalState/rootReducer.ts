@@ -5,6 +5,7 @@ import upsertPlugin from "pouchdb-upsert";
 import { GQLUser, GQLMedia } from "../graphql/graphqlTypes";
 import IndexContainer from "../util/IndexContainer";
 import { MediaSearchIndexEntry, mediaSearchIndexEntryFields } from "../dm/MediaSearchIndexEntry";
+import { CurrentOpenAnime } from "../dm/CurrentWatchedAnime";
 
 PouchDb.plugin(upsertPlugin);
 
@@ -39,7 +40,7 @@ export interface AppState {
     extensions?: string[],
     fileNameRegexes?: string[],
     mediaSearchIndex?: IndexContainer<MediaSearchIndexEntry>,
-    currentOpenAnime?: GQLMedia
+    currentOpenAnime?: CurrentOpenAnime
 }
 
 export type TReducerActions = IInitConfigDb | IInitMediaSearchIndex | ISetPin | ILoadConfigFromDb | ISetUser | ISetCommands |

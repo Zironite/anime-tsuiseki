@@ -1,9 +1,15 @@
 import { IAppStateBaseAction, AppStateActionTypes } from "./rootReducer";
 import { ConfigEntry } from "../dm/ConfigEntry";
 import { GQLUser } from "../graphql/graphqlTypes";
+import { MediaSearchIndexEntry } from "../dm/MediaSearchIndexEntry";
 
 export interface IInitConfigDb extends IAppStateBaseAction {
     type: AppStateActionTypes.INIT_CONFIG_DB
+}
+
+export interface IInitMediaSearchIndex extends IAppStateBaseAction {
+    type: AppStateActionTypes.INIT_MEDIA_SEARCH_INDEX,
+    entries?: MediaSearchIndexEntry[]
 }
 
 export interface ISetPin extends IAppStateBaseAction {

@@ -1,8 +1,13 @@
-import { IInitConfigDb, ISetPin, ILoadConfigFromDb, ISetUser, ISetCommands, ISetExtensions, ISetFileNameRegexes } from "./actions";
+import { IInitConfigDb, ISetPin, ILoadConfigFromDb, ISetUser, ISetCommands, ISetExtensions, ISetFileNameRegexes, IInitMediaSearchIndex } from "./actions";
 import { ConfigEntry, getFromConfigEntryList } from "../dm/ConfigEntry";
 import PouchDb from "pouchdb-browser";
 import upsertPlugin from "pouchdb-upsert";
 import { GQLUser } from "../graphql/graphqlTypes";
+import IndexContainer from "../util/IndexContainer";
+import { MediaSearchIndexEntry, mediaSearchIndexEntryFields } from "../dm/MediaSearchIndexEntry";
+
+PouchDb.plugin(upsertPlugin);
+
 export const initialState: AppState = {
     anilistApi: "https://graphql.anilist.co",
     clientId: 2979
@@ -10,12 +15,14 @@ export const initialState: AppState = {
 
 export enum AppStateActionTypes {
     INIT_CONFIG_DB,
+    INIT_MEDIA_SEARCH_INDEX,
     SET_PIN,
     LOAD_CONFIG_FROM_DB,
     SET_USER,
     SET_COMMANDS,
     SET_EXTENSIONS,
-    SET_FILENAME_REGEXES
+    SET_FILENAME_REGEXES,
+    ADD_MEDIA_SEARCH_INDEX_ENTRIES
 }
 
 export interface IAppStateBaseAction {
@@ -30,19 +37,24 @@ export interface AppState {
     currentUser?: GQLUser,
     commands?: string[],
     extensions?: string[],
-    fileNameRegexes?: string[]
+    fileNameRegexes?: string[],
+    mediaSearchIndex?: IndexContainer<MediaSearchIndexEntry>
 }
 
-export type TReducerActions = IInitConfigDb | ISetPin | ILoadConfigFromDb | ISetUser | ISetCommands |
+export type TReducerActions = IInitConfigDb | IInitMediaSearchIndex | ISetPin | ILoadConfigFromDb | ISetUser | ISetCommands |
     ISetExtensions | ISetFileNameRegexes
 export function rootReducer(state: AppState = initialState, action: TReducerActions): AppState {
     switch(action.type) {
         case AppStateActionTypes.INIT_CONFIG_DB:
             console.log("Initializing DB");
-            PouchDb.plugin(upsertPlugin);
             const newDb: PouchDB.Database<ConfigEntry> = new PouchDb("config");
             console.log("Loaded db");
             return { ...state, configDb: newDb, pin: "" };
+        case AppStateActionTypes.INIT_MEDIA_SEARCH_INDEX:
+            console.log("Initializing media search index");
+            const index = new IndexContainer<MediaSearchIndexEntry>(mediaSearchIndexEntryFields);
+            action.entries?.forEach(entry => index.add(entry));
+            return { ...state, mediaSearchIndex: index };
         case AppStateActionTypes.LOAD_CONFIG_FROM_DB:
             console.log(action.data);
             const loadedPin = getFromConfigEntryList(action.data, "pin");

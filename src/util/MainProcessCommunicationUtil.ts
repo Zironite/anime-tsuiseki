@@ -55,3 +55,12 @@ export function setAcceptedExtensions(extensions: string[]) {
         extensions: extensions
     });
 }
+
+export function setFileNameRegexes(fileNameRegexes: string[]) {
+    const request_id = uuid.v4();
+    ipcRenderer.send('asynchronous-message', {
+        request_id: request_id,
+        type: "setFileNameRegexes",
+        fileNameRegexes: fileNameRegexes
+    });
+}

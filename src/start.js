@@ -58,6 +58,10 @@ electron.ipcMain.on('asynchronous-message', (e,arg) => {
       break;
     case 'setAcceptedExtensions':
       electronNodeUtil.setAcceptedExtensions(arg.extensions);
+      break;
+    case 'setFileNameRegexes':
+      electronNodeUtil.setFileNameRegexes(arg.fileNameRegexes);
+      break;
     default:
       break;
   }

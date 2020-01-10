@@ -46,3 +46,12 @@ export function setProcessCommandsToMonitor(commands: string[]) {
         commands: commands
     });
 }
+
+export function setAcceptedExtensions(extensions: string[]) {
+    const request_id = uuid.v4();
+    ipcRenderer.send('asynchronous-message', {
+        request_id: request_id,
+        type: "setAcceptedExtensions",
+        extensions: extensions
+    });
+}

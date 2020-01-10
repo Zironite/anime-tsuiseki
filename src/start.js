@@ -56,6 +56,8 @@ electron.ipcMain.on('asynchronous-message', (e,arg) => {
     case 'setProcessCommandsToMonitor':
       electronNodeUtil.setProcessCommandsToMonitor(arg.commands);
       break;
+    case 'setAcceptedExtensions':
+      electronNodeUtil.setAcceptedExtensions(arg.extensions);
     default:
       break;
   }

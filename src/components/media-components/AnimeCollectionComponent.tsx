@@ -33,23 +33,6 @@ class AnimeCollectionComponent extends Component<AnimeCollectionComponentProps, 
     }
 
     render() {
-        let firstAndPrevPagination: JSX.Element | undefined;
-        let lastAndNextPagination: JSX.Element | undefined;
-
-        if (this.state.currPage !== 0) {
-            firstAndPrevPagination = 
-                <React.Fragment>
-                    
-                </React.Fragment>;
-        }
-
-        if (this.state.currPage !== this.state.pageData?.pageInfo?.lastPage) {
-            lastAndNextPagination =
-                <React.Fragment>
-                    
-                </React.Fragment>
-        }
-
         return (
             <div>
                 <div className="min-height-75vh">

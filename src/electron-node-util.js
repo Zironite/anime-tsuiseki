@@ -4,7 +4,7 @@ const psList = require("ps-list");
 
 const monitorProcessesConfig = {
     commands: [],
-    extensions: [".mkv",".mp4",".avi"]
+    extensions: []
 }
 
 module.exports = {
@@ -25,6 +25,9 @@ module.exports = {
     },
     setProcessCommandsToMonitor: (value) => {
         monitorProcessesConfig.commands = value;
+    },
+    setAcceptedExtensions: (value) => {
+        monitorProcessesConfig.extensions = value;
     },
     monitorProcesses: () => {
         psList().then((response) => {

@@ -1,5 +1,7 @@
 import React, { Component, FormEvent } from 'react'
-import { Form } from 'react-bootstrap';
+import { Form, Button, Row, Col } from 'react-bootstrap';
+import { FaPlus, FaMinus } from "react-icons/fa";
+import './TextInputListComponent.css';
 
 interface Props {
     controlId: string,
@@ -22,6 +24,8 @@ export default class TextInputListComponent extends Component<Props, State> {
 
         this.state.texts = this.props.texts;
         this.changeText = this.changeText.bind(this);
+        this.addText = this.addText.bind(this);
+        this.removeText = this.removeText.bind(this);
     }
 
     render() {
@@ -30,12 +34,24 @@ export default class TextInputListComponent extends Component<Props, State> {
                 <Form.Label>{this.props.label}</Form.Label>
                 {this.state.texts.map((text,index) => {
                     return (
-                        <Form.Control key={`textInput${index}`} 
-
-                            type="text" 
-                            defaultValue={text} onChange={(e: React.FormEvent<HTMLInputElement>) => this.changeText(e,index)} />
+                        <Row className="mb-2 mt-2" key={`textInput${index}`}>
+                            <Col sm={6}>
+                                <Form.Control
+                                    type="text" 
+                                    value={text} onChange={(e: React.FormEvent<HTMLInputElement>) => this.changeText(e,index)} />
+                            </Col>
+                            <Col>
+                                <Button className="remove-button"
+                                    onClick={() => this.removeText(index)}>
+                                    <FaMinus />
+                                </Button>
+                            </Col>
+                        </Row>
                     );
                 })}
+                <Button className="add-button" onClick={this.addText}>
+                    <FaPlus />
+                </Button>
             </Form.Group>
         )
     }
@@ -50,6 +66,19 @@ export default class TextInputListComponent extends Component<Props, State> {
         const newValue = e.currentTarget.value;
         const newTexts = [...this.state.texts];
         newTexts[index] = newValue;
+        this.setState({
+            texts: newTexts
+        });
+    }
+
+    addText() {
+        this.setState({
+            texts: [...this.state.texts,""]
+        });
+    }
+
+    removeText(index: number) {
+        const newTexts = this.state.texts.filter((_v,currIndex) => currIndex !== index);
         this.setState({
             texts: newTexts
         });

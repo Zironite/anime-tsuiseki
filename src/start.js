@@ -62,6 +62,8 @@ electron.ipcMain.on('asynchronous-message', (e,arg) => {
     case 'setFileNameRegexes':
       electronNodeUtil.setFileNameRegexes(arg.fileNameRegexes);
       break;
+    case 'setCurrentOpenAnime':
+      electronNodeUtil.setCurrentOpenAnime(arg.name, arg.episode);
     default:
       break;
   }

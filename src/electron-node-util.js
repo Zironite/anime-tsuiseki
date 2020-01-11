@@ -1,12 +1,12 @@
 const request = require('request');
-const exec = require("child_process").exec;
+const util = require('util');
+const exec = util.promisify(require("child_process").exec);
 const psList = require("ps-list");
 
 const monitorProcessesConfig = {
     commands: [],
     extensions: [],
-    fileNameRegexes: [],
-    currentOpenAnime: {}
+    fileNameRegexes: []
 }
 
 module.exports = {
@@ -44,10 +44,14 @@ module.exports = {
     monitorProcesses: (webContents) => {
         psList().then((response) => {
             const relevantProcesses = response.filter(p => monitorProcessesConfig.commands.find(c => c === p.name));
-            const foundCurrentAnime = false;
+            let foundCurrentAnime = false;
+            let promises = []
             relevantProcesses.forEach(p => {
                 const pathOfFd = `/proc/${p.pid}/fd/`;
-                exec(`for f in $(ls ${pathOfFd}); do readlink "${pathOfFd}/$f"; done`, (err,stdout,stderr) => {
+                let execPromise = exec(`for f in $(ls ${pathOfFd}); do readlink "${pathOfFd}/$f"; done`);
+                promises.push(execPromise);
+                execPromise.then(response => {
+                    const stdout = response.stdout;
                     const fileNames = stdout.split("\n");
                     const onlyMediaFiles = fileNames.filter(fileName => 
                         monitorProcessesConfig.extensions.find(extension => fileName.endsWith(extension)))
@@ -62,32 +66,37 @@ module.exports = {
                                 const foundAnimeName = extractedGroups.groups.name;
                                 const foundAnimeEpisode = parseInt(extractedGroups.groups.episode || 0);
 
-                                if (foundAnimeName === monitorProcessesConfig.currentOpenAnime.name &&
-                                    foundAnimeEpisode === monitorProcessesConfig.currentOpenAnime.episode) {
+                                if (!monitorProcessesConfig.currentOpenAnime || (foundAnimeName === monitorProcessesConfig.currentOpenAnime.name &&
+                                    foundAnimeEpisode === monitorProcessesConfig.currentOpenAnime.episode)) {
+                                        webContents.send("process-monitor", {
+                                            name: foundAnimeName,
+                                            episode: foundAnimeEpisode,
+                                            isFound: true
+                                        });
                                         foundCurrentAnime = true;
                                 }
-
-                                webContents.send("process-monitor", {
-                                    name: foundAnimeName,
-                                    episode: foundAnimeEpisode,
-                                    isFound: true
-                                });
                             }
                         }
                     });
-                });
+                }).catch(err => console.error(err));
             });
 
-            if (!foundCurrentAnime) {
-                webContents.send("process-monitor", {
-                    name: monitorProcessesConfig.currentOpenAnime.name,
-                    episode: monitorProcessesConfig.currentOpenAnime.episode,
-                    isFound: false
-                });
-            }
+            Promise.all(promises).then(() => {
+                if (!foundCurrentAnime && monitorProcessesConfig.currentOpenAnime) {
+                    webContents.send("process-monitor", {
+                        name: monitorProcessesConfig.currentOpenAnime.name,
+                        episode: monitorProcessesConfig.currentOpenAnime.episode,
+                        isFound: false
+                    });
+                }
+            }).catch(err => console.error(err));
+            
         }).catch(err => console.error(err));        
     },
     setCurrentOpenAnime: (name,episode) => {
+        if (!monitorProcessesConfig.currentOpenAnime) {
+            monitorProcessesConfig.currentOpenAnime = {}
+        }
         monitorProcessesConfig.currentOpenAnime.name = name;
         monitorProcessesConfig.currentOpenAnime.episode = episode;
     }

@@ -15,6 +15,7 @@ ipcRenderer.on("process-monitor", (e,message: ProcessMonitorMessage) => {
     if ((queryResult?.length || 0) > 0 && currentState.anilistApi && currentState.pin &&
         (queryResult![0].key !== currentState.currentOpenAnime?.id || 
             message.episode !== currentState.currentOpenAnime?.currentEpisode)) {
+        setCurrentOpenAnime(message.name, message.episode);
         type IGetAnimeById = {
             data: GQLQuery
         };
@@ -102,5 +103,15 @@ export function setFileNameRegexes(fileNameRegexes: string[]) {
         request_id: request_id,
         type: "setFileNameRegexes",
         fileNameRegexes: fileNameRegexes
+    });
+}
+
+function setCurrentOpenAnime(name: string, episode: number) {
+    const request_id = uuid.v4();
+    ipcRenderer.send('asynchronous-message', {
+        request_id: request_id,
+        type: "setCurrentOpenAnime",
+        name: name,
+        episode: episode
     });
 }

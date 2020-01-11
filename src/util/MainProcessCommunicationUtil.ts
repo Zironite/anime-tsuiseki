@@ -1,7 +1,7 @@
 import * as uuid from 'uuid';
 import { ProcessMonitorMessage } from '../dm/ProcessMonitorMessage';
 import { store } from "../index";
-import { GQLMedia, GQLQuery } from '../graphql/graphqlTypes';
+import { GQLQuery } from '../graphql/graphqlTypes';
 import { loader } from 'graphql.macro';
 import { AppStateActionTypes } from '../globalState/rootReducer';
 import { CurrentOpenAnime } from '../dm/CurrentWatchedAnime';

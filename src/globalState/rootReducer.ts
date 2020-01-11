@@ -2,7 +2,7 @@ import { IInitConfigDb, ISetPin, ILoadConfigFromDb, ISetUser, ISetCommands, ISet
 import { ConfigEntry, getFromConfigEntryList } from "../dm/ConfigEntry";
 import PouchDb from "pouchdb-browser";
 import upsertPlugin from "pouchdb-upsert";
-import { GQLUser, GQLMedia } from "../graphql/graphqlTypes";
+import { GQLUser } from "../graphql/graphqlTypes";
 import IndexContainer from "../util/IndexContainer";
 import { MediaSearchIndexEntry, mediaSearchIndexEntryFields } from "../dm/MediaSearchIndexEntry";
 import { CurrentOpenAnime } from "../dm/CurrentWatchedAnime";

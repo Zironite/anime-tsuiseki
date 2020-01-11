@@ -14,6 +14,7 @@ import { setProcessCommandsToMonitor, setAcceptedExtensions, setFileNameRegexes,
 import { GQLMediaList, GQLPage, GQLMediaListStatus } from './graphql/graphqlTypes';
 import { loader } from "graphql.macro";
 import { MediaSearchIndexEntry } from './dm/MediaSearchIndexEntry';
+import { MainSettingsComponent } from './components/settings-components/MainSettingsComponent';
 
 interface AppComponentState {
   enterPin: boolean
@@ -63,6 +64,9 @@ class App extends Component<AppProps,AppComponentState> {
             </Route>
             <Route path="/anime/list/:userId">
               <AnimeListComponent pageSize={10}/>
+            </Route>
+            <Route path="/settings">
+              <MainSettingsComponent />
             </Route>
           </Switch>
         </BrowserRouter>

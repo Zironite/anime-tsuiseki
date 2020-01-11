@@ -33,9 +33,14 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
                         className="rounded-circle avatar-img mr-3" />
                     <span>{this.props.currentUser?.name}</span>
                 </Navbar.Brand>
-                <Nav className="mr-auto">
+                <Nav className="mr-3">
                     <Nav.Link as={Link} to={`/anime/list/${this.props.currentUser?.id}`}>
                         Anime List
+                    </Nav.Link>
+                </Nav>
+                <Nav className="mr-auto">
+                    <Nav.Link as={Link} to="/settings">
+                        Settings
                     </Nav.Link>
                 </Nav>
                 <Nav>

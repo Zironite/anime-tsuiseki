@@ -17,7 +17,7 @@ ipcRenderer.on("process-monitor", (e,message: ProcessMonitorMessage) => {
             message.episode !== currentState.currentOpenAnime?.currentEpisode)) {
         type IGetAnimeById = {
             data: GQLQuery
-        }
+        };
         queryAniList<IGetAnimeById>(currentState.anilistApi!,
             currentState.pin!,
             query.loc?.source.body!,
@@ -33,6 +33,12 @@ ipcRenderer.on("process-monitor", (e,message: ProcessMonitorMessage) => {
                     } as CurrentOpenAnime
                 });
             }).catch(err => console.log(err));
+    } else if((queryResult?.length || 0) > 0 && queryResult![0].key === currentState.currentOpenAnime?.id &&
+        message.episode === currentState.currentOpenAnime.currentEpisode && !message.isFound) {
+            store.dispatch({
+                type: AppStateActionTypes.SET_CURRENT_OPEN_ANIME,
+                anime: null
+            });
     }
 })
 

@@ -1,4 +1,5 @@
 export interface ProcessMonitorMessage {
     name: string,
-    episode: number
+    episode: number,
+    isFound: boolean
 }

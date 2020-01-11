@@ -45,5 +45,5 @@ export interface ISetFileNameRegexes extends IAppStateBaseAction {
 
 export interface ISetCurrentOpenAnime extends IAppStateBaseAction {
     type: AppStateActionTypes.SET_CURRENT_OPEN_ANIME,
-    anime: CurrentOpenAnime
+    anime: CurrentOpenAnime | null
 }

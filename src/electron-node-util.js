@@ -5,7 +5,8 @@ const psList = require("ps-list");
 const monitorProcessesConfig = {
     commands: [],
     extensions: [],
-    fileNameRegexes: []
+    fileNameRegexes: [],
+    currentOpenAnime: {}
 }
 
 module.exports = {
@@ -36,6 +37,7 @@ module.exports = {
     monitorProcesses: (webContents) => {
         psList().then((response) => {
             const relevantProcesses = response.filter(p => monitorProcessesConfig.commands.find(c => c === p.name));
+            const foundCurrentAnime = false;
             relevantProcesses.forEach(p => {
                 const pathOfFd = `/proc/${p.pid}/fd/`;
                 exec(`for f in $(ls ${pathOfFd}); do readlink "${pathOfFd}/$f"; done`, (err,stdout,stderr) => {
@@ -50,15 +52,36 @@ module.exports = {
                             
                             const extractedGroups = fileName.match(element);
                             if (extractedGroups) {
+                                const foundAnimeName = extractedGroups.groups.name;
+                                const foundAnimeEpisode = parseInt(extractedGroups.groups.episode || 0);
+
+                                if (foundAnimeName === monitorProcessesConfig.currentOpenAnime.name &&
+                                    foundAnimeEpisode === monitorProcessesConfig.currentOpenAnime.episode) {
+                                        foundCurrentAnime = true;
+                                }
+
                                 webContents.send("process-monitor", {
-                                    name: extractedGroups.groups.name,
-                                    episode: parseInt(extractedGroups.groups.episode || 0)
+                                    name: foundAnimeName,
+                                    episode: foundAnimeEpisode,
+                                    isFound: true
                                 });
                             }
                         }
                     });
                 });
             });
+
+            if (!foundCurrentAnime) {
+                webContents.send("process-monitor", {
+                    name: monitorProcessesConfig.currentOpenAnime.name,
+                    episode: monitorProcessesConfig.currentOpenAnime.episode,
+                    isFound: false
+                });
+            }
         }).catch(err => console.error(err));        
+    },
+    setCurrentOpenAnime: (name,episode) => {
+        monitorProcessesConfig.currentOpenAnime.name = name;
+        monitorProcessesConfig.currentOpenAnime.episode = episode;
     }
 }

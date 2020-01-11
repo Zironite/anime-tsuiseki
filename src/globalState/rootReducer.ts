@@ -40,7 +40,7 @@ export interface AppState {
     extensions?: string[],
     fileNameRegexes?: string[],
     mediaSearchIndex?: IndexContainer<MediaSearchIndexEntry>,
-    currentOpenAnime?: CurrentOpenAnime
+    currentOpenAnime?: CurrentOpenAnime | null
 }
 
 export type TReducerActions = IInitConfigDb | IInitMediaSearchIndex | ISetPin | ILoadConfigFromDb | ISetUser | ISetCommands |

@@ -4,7 +4,8 @@ import { Form } from 'react-bootstrap';
 interface Props {
     controlId: string,
     label: string,
-    texts: string[]
+    texts: string[],
+    onChange: (texts: string[]) => void
 }
 
 interface State {
@@ -37,6 +38,12 @@ export default class TextInputListComponent extends Component<Props, State> {
                 })}
             </Form.Group>
         )
+    }
+
+    componentDidUpdate(_prevProps: Props, prevState: State) {
+        if (this.state.texts !== prevState.texts) {
+            this.props.onChange(this.state.texts);
+        }
     }
 
     changeText(e: React.FormEvent<HTMLInputElement>, index: number) {

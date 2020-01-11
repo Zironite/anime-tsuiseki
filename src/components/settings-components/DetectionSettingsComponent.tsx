@@ -3,20 +3,29 @@ import { connect } from 'react-redux'
 import { AppState, AppStateActionTypes } from '../../globalState/rootReducer'
 import { type } from 'os'
 import { ISetFileNameRegexes } from "../../globalState/actions";
-import { Form } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import TextInputListComponent from '../general/TextInputListComponent';
 
 interface Props {
     
 }
 interface State {
+    fileNameRegexes: string[]
 }
 
 export class DetectionSettingsComponent extends Component<TDetectionSettingsComponentProps, State> {
     state: State = {
+        fileNameRegexes: []
     }
     constructor(props: TDetectionSettingsComponentProps) {
         super(props);
+
+        this.setState({
+            fileNameRegexes: this.props.fileNameRegexes || []
+        });
+
+        this.onFileNameRegexesChange = this.onFileNameRegexesChange.bind(this);
+        this.saveChanges = this.saveChanges.bind(this);
     }
 
     render() {
@@ -24,9 +33,23 @@ export class DetectionSettingsComponent extends Component<TDetectionSettingsComp
             <Form>
                 <TextInputListComponent controlId="formFileNameRegexes" 
                     label="Filename Regexes" 
-                    texts={this.props.fileNameRegexes || []} />
+                    texts={this.props.fileNameRegexes || []} 
+                    onChange={this.onFileNameRegexesChange}/>
+                <Button variant="dark" onClick={this.saveChanges}>
+                    Save
+                </Button>
             </Form>
         )
+    }
+
+    onFileNameRegexesChange(fileNameRegexes: string[]) {
+        this.setState({
+            fileNameRegexes: fileNameRegexes
+        });
+    }
+
+    saveChanges() {
+        this.props.setFileNameRegexes(this.state.fileNameRegexes);
     }
 }
 

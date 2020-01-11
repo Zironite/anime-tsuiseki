@@ -32,7 +32,14 @@ module.exports = {
         monitorProcessesConfig.extensions = value;
     },
     setFileNameRegexes: (value) => {
-        monitorProcessesConfig.fileNameRegexes = value.map(r => new RegExp(r));
+        monitorProcessesConfig.fileNameRegexes = value.map(r => {
+            try {
+                return new RegExp(r);
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+        }).filter(r => r);
     },
     monitorProcesses: (webContents) => {
         psList().then((response) => {

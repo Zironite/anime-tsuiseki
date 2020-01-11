@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppState } from '../../globalState/rootReducer'
 import { Tab, Row, Col, Nav } from 'react-bootstrap'
+import DetectionSettingsComponent from './DetectionSettingsComponent'
 
 interface Props {
     
@@ -33,7 +34,7 @@ export class MainSettingsComponent extends Component<Props, State> {
                                 General
                             </Tab.Pane>
                             <Tab.Pane eventKey="detection">
-                                Detection
+                                <DetectionSettingsComponent />
                             </Tab.Pane>
                         </Tab.Content>
                     </Col>

@@ -1,3 +1,6 @@
 type MediaTitle {
+    romaji: String
+    english: String
+    native: String
     userPreferred: String
 }

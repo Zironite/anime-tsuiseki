@@ -45,9 +45,13 @@ export interface GQLMedia {
   title?: GQLMediaTitle;
   format?: GQLMediaFormat;
   episodes?: number;
+  synonyms?: Array<string | null>;
 }
 
 export interface GQLMediaTitle {
+  romaji?: string;
+  english?: string;
+  native?: string;
   userPreferred?: string;
 }
 
@@ -186,6 +190,7 @@ export interface GQLMediaTypeResolver<TParent = any> {
   title?: MediaToTitleResolver<TParent>;
   format?: MediaToFormatResolver<TParent>;
   episodes?: MediaToEpisodesResolver<TParent>;
+  synonyms?: MediaToSynonymsResolver<TParent>;
 }
 
 export interface MediaToIdResolver<TParent = any, TResult = any> {
@@ -204,8 +209,27 @@ export interface MediaToEpisodesResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 
+export interface MediaToSynonymsResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
 export interface GQLMediaTitleTypeResolver<TParent = any> {
+  romaji?: MediaTitleToRomajiResolver<TParent>;
+  english?: MediaTitleToEnglishResolver<TParent>;
+  native?: MediaTitleToNativeResolver<TParent>;
   userPreferred?: MediaTitleToUserPreferredResolver<TParent>;
+}
+
+export interface MediaTitleToRomajiResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface MediaTitleToEnglishResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface MediaTitleToNativeResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 
 export interface MediaTitleToUserPreferredResolver<TParent = any, TResult = any> {

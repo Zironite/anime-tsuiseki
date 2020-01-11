@@ -121,7 +121,11 @@ class App extends Component<AppProps,AppComponentState> {
     this.props.initMediaSearchIndex(mediaList.map(entry => {
       return {
         id: entry.media?.id,
-        names: [entry.media?.title?.userPreferred]
+        names: [entry.media?.title?.userPreferred || "",
+          entry.media?.title?.english || "",
+          entry.media?.title?.native || "",
+          entry.media?.title?.romaji || ""].concat(...entry.media?.synonyms?.map(s => s || "") || [])
+          .filter(name => name !== "")
       } as MediaSearchIndexEntry;
     }))
   }

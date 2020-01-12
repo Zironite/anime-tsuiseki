@@ -99,5 +99,8 @@ module.exports = {
         }
         monitorProcessesConfig.currentOpenAnime.name = name;
         monitorProcessesConfig.currentOpenAnime.episode = episode;
+    },
+    clearCurrentOpenAnime: () => {
+        monitorProcessesConfig.currentOpenAnime = null;
     }
 }

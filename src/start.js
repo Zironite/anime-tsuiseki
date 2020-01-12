@@ -64,6 +64,9 @@ electron.ipcMain.on('asynchronous-message', (e,arg) => {
       break;
     case 'setCurrentOpenAnime':
       electronNodeUtil.setCurrentOpenAnime(arg.name, arg.episode);
+      break;
+    case 'clearCurrentOpenAnime':
+      electronNodeUtil.clearCurrentOpenAnime();
     default:
       break;
   }

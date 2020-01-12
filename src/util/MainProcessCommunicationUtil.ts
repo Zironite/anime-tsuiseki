@@ -36,6 +36,7 @@ ipcRenderer.on("process-monitor", (e,message: ProcessMonitorMessage) => {
             }).catch(err => console.log(err));
     } else if((queryResult?.length || 0) > 0 && queryResult![0].key === currentState.currentOpenAnime?.id &&
         message.episode === currentState.currentOpenAnime.currentEpisode && !message.isFound) {
+            clearCurrentOpenAnime();
             store.dispatch({
                 type: AppStateActionTypes.SET_CURRENT_OPEN_ANIME,
                 anime: null
@@ -113,5 +114,13 @@ function setCurrentOpenAnime(name: string, episode: number) {
         type: "setCurrentOpenAnime",
         name: name,
         episode: episode
+    });
+}
+
+function clearCurrentOpenAnime() {
+    const request_id = uuid.v4();
+    ipcRenderer.send('asynchronous-message', {
+        request_id: request_id,
+        type: "clearCurrentOpenAnime"
     });
 }

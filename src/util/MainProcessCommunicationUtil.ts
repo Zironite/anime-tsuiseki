@@ -1,14 +1,11 @@
 import * as uuid from 'uuid';
 import { ProcessMonitorMessage } from '../dm/ProcessMonitorMessage';
 import { store } from "../index";
-import { GQLQuery } from '../graphql/graphqlTypes';
-import { loader } from 'graphql.macro';
 import { AppStateActionTypes } from '../globalState/rootReducer';
 import { CurrentOpenAnime } from '../dm/CurrentWatchedAnime';
 import { getAnimeById } from './AniListQueryUtil';
 
 const { ipcRenderer } = window.require('electron');
-const query = loader("../graphql/queries/GetAnimeById.gql");
 ipcRenderer.on("process-monitor", (e,message: ProcessMonitorMessage) => {
     const currentState = store.getState();
     const queryResult = currentState.mediaSearchIndex?.search(message.name);

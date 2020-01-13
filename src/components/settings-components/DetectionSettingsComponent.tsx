@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppState, AppStateActionTypes } from '../../globalState/rootReducer'
-import { type } from 'os'
 import { ISetFileNameRegexes } from "../../globalState/actions";
 import { Form, Button } from 'react-bootstrap';
 import TextInputListComponent from '../general/TextInputListComponent';

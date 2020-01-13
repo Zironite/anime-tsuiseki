@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { AppState } from '../../globalState/rootReducer'
 import { Tab, Row, Col, Nav } from 'react-bootstrap'
 import DetectionSettingsComponent from './DetectionSettingsComponent'
 

@@ -10,6 +10,7 @@ import { Navbar, Nav } from "react-bootstrap";
 import { FaSignOutAlt, FaPlay } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import Ticker from "react-ticker";
+import { getUserDataUtil } from '../../util/AniListQueryUtil';
 
 enum DropdownOptions {
     PROFILE = "1",
@@ -64,23 +65,7 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
     }
 
     getUserData() {
-        const query = this.getCurrentUserDataQuery.loc?.source.body!;
-
-        console.log(JSON.stringify({
-            query: query
-        }));
-
-        console.log(`Querying ${this.props.url}`);
-        type TGQLGetUserDataReturnType = {
-            data: {
-                Viewer: GQLUser
-            }
-        }
-        queryAniList<TGQLGetUserDataReturnType>(this.props.url as string, this.props.pin as string, query)
-            .then(response => {
-                this.props.setUser(response.body?.data.Viewer!);
-            })
-            .catch(err => console.error(err));
+        getUserDataUtil();
     }
 
     handleDropdownOnSelect(eventKey: any) {

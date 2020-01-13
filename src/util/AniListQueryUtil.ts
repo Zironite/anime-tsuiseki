@@ -6,55 +6,66 @@ import { store } from "../index";
 import { ISetUser } from "../globalState/actions";
 import { AppStateActionTypes } from "../globalState/rootReducer";
 
-const getAnimeListPageQuery = extractQuery(loader("./graphql/queries/GetAnimeListPage.gql"));
-const getCurrentUserDataQuery = extractQuery(loader("../../graphql/queries/GetCurrentUserData.gql"));
+const getAnimeListPageQuery = extractQuery(loader("../graphql/queries/GetAnimeListPage.gql"));
+const getCurrentUserDataQuery = extractQuery(loader("../graphql/queries/GetCurrentUserData.gql"));
 const getAnimeByIdQuery = extractQuery(loader("../graphql/queries/GetAnimeById.gql"));
 
 function extractQuery(documentNode: DocumentNode) {
     return documentNode.loc?.source.body;
 }
 
+export async function getAnimeListPageUtil(mediaListStatus: GQLMediaListStatus,
+    pageSize: number, 
+    page: number) {
+        type TGQLGetAnimeListPageReturnType = {
+            data: {
+                Page: GQLPage
+            }
+        };
+
+        const url = store.getState().anilistApi;
+        const pin = store.getState().pin;
+        const userId = store.getState().currentUser?.id;
+
+        let requestPromiseResult = await queryAniList<TGQLGetAnimeListPageReturnType>(url!,
+            pin!,
+            getAnimeListPageQuery!,
+            {
+              page: page,
+              perPage: pageSize,
+              userId: userId,
+              status: mediaListStatus
+            });
+        if (requestPromiseResult.err) {
+            console.error(requestPromiseResult.err);
+        }
+        return requestPromiseResult.body?.data.Page;
+    }
 export async function getAnimeList(mediaListStatus: GQLMediaListStatus,
     pageSize: number, 
     fromPage: number, 
     untilPage?: number) {
-    type TGQLGetAnimeListPageReturnType = {
-        data: {
-            Page: GQLPage
-        }
-    }
 
     let currentPage = fromPage;
     let lastPage = untilPage || Infinity;
-    const url = store.getState().anilistApi;
-    const pin = store.getState().pin;
-    const userId = store.getState().currentUser?.id;
     const mediaList: GQLMediaList[] = [];
 
     while (currentPage < lastPage) {
-      let requestPromiseResult = await queryAniList<TGQLGetAnimeListPageReturnType>(url!,
-        pin!,
-        getAnimeListPageQuery!,
-        {
-          page: currentPage,
-          perPage: pageSize,
-          userId: userId,
-          status: mediaListStatus
-        });
-      if (requestPromiseResult.err) {
-        console.error(requestPromiseResult.err);
-        break;
-      } else {
+      let requestPromiseResult = await getAnimeListPageUtil(mediaListStatus, pageSize, currentPage);
+
+      if (requestPromiseResult) {
         currentPage += 1;
-        lastPage = requestPromiseResult.body?.data.Page.pageInfo?.lastPage!;
-        mediaList.push(...requestPromiseResult.body?.data.Page.mediaList?.map(entry => entry!)!);
+        lastPage = requestPromiseResult.pageInfo?.lastPage!;
+        mediaList.push(...requestPromiseResult.mediaList?.map(entry => entry!)!);
+      } else {
+          break;
       }
     }
 
     return mediaList;
 }
 
-export function getUserData() {
+export function getUserDataUtil() {
     console.log(JSON.stringify({
         query: getCurrentUserDataQuery
     }));

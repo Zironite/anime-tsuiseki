@@ -5,6 +5,7 @@ import { GQLQuery } from '../graphql/graphqlTypes';
 import { loader } from 'graphql.macro';
 import { AppStateActionTypes } from '../globalState/rootReducer';
 import { CurrentOpenAnime } from '../dm/CurrentWatchedAnime';
+import { getAnimeById } from './AniListQueryUtil';
 
 const { ipcRenderer } = window.require('electron');
 const query = loader("../graphql/queries/GetAnimeById.gql");
@@ -16,24 +17,17 @@ ipcRenderer.on("process-monitor", (e,message: ProcessMonitorMessage) => {
         (queryResult![0].key !== currentState.currentOpenAnime?.id || 
             message.episode !== currentState.currentOpenAnime?.currentEpisode)) {
         setCurrentOpenAnime(message.name, message.episode);
-        type IGetAnimeById = {
-            data: GQLQuery
-        };
-        queryAniList<IGetAnimeById>(currentState.anilistApi!,
-            currentState.pin!,
-            query.loc?.source.body!,
-            {
-                id: queryResult![0].key
-            }).then(response => {
-                store.dispatch({
-                    type: AppStateActionTypes.SET_CURRENT_OPEN_ANIME,
-                    anime: {
-                        id: response.body?.data.Media?.id!,
-                        name: response.body?.data.Media?.title?.userPreferred!,
-                        currentEpisode: message.episode
-                    } as CurrentOpenAnime
-                });
-            }).catch(err => console.log(err));
+
+        getAnimeById(queryResult![0].key).then(response => {
+            store.dispatch({
+                type: AppStateActionTypes.SET_CURRENT_OPEN_ANIME,
+                anime: {
+                    id: response.body?.data.Media?.id!,
+                    name: response.body?.data.Media?.title?.userPreferred!,
+                    currentEpisode: message.episode
+                } as CurrentOpenAnime
+            });
+        }).catch(err => console.log(err));
     } else if((queryResult?.length || 0) > 0 && queryResult![0].key === currentState.currentOpenAnime?.id &&
         message.episode === currentState.currentOpenAnime.currentEpisode && !message.isFound) {
             clearCurrentOpenAnime();

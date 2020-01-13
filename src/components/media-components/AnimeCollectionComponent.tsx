@@ -8,6 +8,7 @@ import { Table, ProgressBar } from 'react-bootstrap';
 import './AnimeCollectionComponent.css';
 import { humanMediaFormat } from "../../util/GeneralUtil";
 import PaginationComponent from '../general/PaginationComponent';
+import { getAnimeList, getAnimeListPageUtil } from '../../util/AniListQueryUtil';
 
 interface Props {
     pageSize: number,
@@ -84,24 +85,11 @@ class AnimeCollectionComponent extends Component<AnimeCollectionComponentProps, 
 
     getAnimeListPage() {
         if (this.props.pin && this.props.userId) {
-            const query = this.getAnimeListPageQuery.loc?.source.body;
-
-            type TGQLGetAnimeListPageReturyType = {
-                data: {
-                    Page: GQLPage
-                }
-            };
-            queryAniList<TGQLGetAnimeListPageReturyType>(this.props.url as string,
-                this.props.pin as string,
-                query as string,
-                {
-                    page: this.state.currPage,
-                    perPage: this.props.pageSize,
-                    userId: this.props.userId,
-                    status: this.props.status
-                }).then(response => {
+            getAnimeListPageUtil(this.props.status,
+                this.props.pageSize,
+                this.state.currPage).then(response => {
                     this.setState({
-                        pageData: response.body?.data.Page
+                        pageData: response
                     });
                 }).catch(err => {
                     console.error(err)

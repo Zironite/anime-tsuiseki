@@ -15,6 +15,7 @@ import { GQLMediaList, GQLPage, GQLMediaListStatus } from './graphql/graphqlType
 import { loader } from "graphql.macro";
 import { MediaSearchIndexEntry } from './dm/MediaSearchIndexEntry';
 import { MainSettingsComponent } from './components/settings-components/MainSettingsComponent';
+import { getAnimeList } from './util/AniListQueryUtil';
 
 interface AppComponentState {
   enterPin: boolean
@@ -92,46 +93,20 @@ class App extends Component<AppProps,AppComponentState> {
   }
 
   async loadCurrentUserAnime() {
-    type TGQLGetAnimeListPageReturnType = {
-        data: {
-            Page: GQLPage
-        }
-    }
-    const query = this.getAnimeListPageQuery.loc?.source.body;
-    let currentPage = 1;
-    let lastPage = Infinity;
-    const mediaList: GQLMediaList[] = [];
-
-    while (currentPage < lastPage) {
-      let requestPromiseResult = await queryAniList<TGQLGetAnimeListPageReturnType>(this.props.url as string,
-        this.props.pin as string,
-        query as string,
-        {
-          page: currentPage,
-          perPage: 10,
-          userId: this.props.currentUser?.id,
-          status: GQLMediaListStatus.CURRENT
-        });
-      if (requestPromiseResult.err) {
-        console.error(requestPromiseResult.err);
-        break;
-      } else {
-        currentPage += 1;
-        lastPage = requestPromiseResult.body?.data.Page.pageInfo?.lastPage!;
-        mediaList.push(...requestPromiseResult.body?.data.Page.mediaList?.map(entry => entry!)!);
-      }
-    }
-
-    this.props.initMediaSearchIndex(mediaList.map(entry => {
-      return {
-        id: entry.media?.id,
-        names: [entry.media?.title?.userPreferred || "",
-          entry.media?.title?.english || "",
-          entry.media?.title?.native || "",
-          entry.media?.title?.romaji || ""].concat(...entry.media?.synonyms?.map(s => s || "") || [])
-          .filter(name => name !== "")
-      } as MediaSearchIndexEntry;
-    }))
+    getAnimeList(GQLMediaListStatus.CURRENT,
+      10,
+      1).then(mediaList => {
+        this.props.initMediaSearchIndex(mediaList.map(entry => {
+          return {
+            id: entry.media?.id,
+            names: [entry.media?.title?.userPreferred || "",
+              entry.media?.title?.english || "",
+              entry.media?.title?.native || "",
+              entry.media?.title?.romaji || ""].concat(...entry.media?.synonyms?.map(s => s || "") || [])
+              .filter(name => name !== "")
+          } as MediaSearchIndexEntry;
+        }));
+      }).catch(err => console.error(err));
   }
 
   componentDidUpdate(prevProps: AppProps) {

@@ -47,7 +47,7 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
                 <>
                     <FaPlay className={this.props.currentAnime ? "active-play-button" : "inactive-play-button"} />
                     <Ticker mode="await" height={20} speed={10}>
-                        {({ index }) => (
+                        {() => (
                             <>
                                 <h6 className="text-light">{this.props.currentAnime?.name || "Not watching anything right now"}</h6>
                             </>

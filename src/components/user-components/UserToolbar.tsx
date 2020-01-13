@@ -7,8 +7,9 @@ import { GQLUser } from '../../graphql/graphqlTypes';
 import { ISetUser } from '../../globalState/actions';
 import "./UserToolbar.css";
 import { Navbar, Nav } from "react-bootstrap";
-import { FaSignOutAlt } from "react-icons/fa";
+import { FaSignOutAlt, FaPlay } from "react-icons/fa";
 import { Link } from 'react-router-dom';
+import Ticker from "react-ticker";
 
 enum DropdownOptions {
     PROFILE = "1",
@@ -43,7 +44,17 @@ class UserToolbar extends Component<UserToolbarProps,{}> {
                         Settings
                     </Nav.Link>
                 </Nav>
-                <Nav>
+                <>
+                    <FaPlay className={this.props.currentAnime ? "active-play-button" : "inactive-play-button"} />
+                    <Ticker mode="await" height={20} speed={10}>
+                        {({ index }) => (
+                            <>
+                                <h6 className="text-light">{this.props.currentAnime?.name || "Not watching anything right now"}</h6>
+                            </>
+                        )}
+                    </Ticker>
+                </>
+                <Nav className="ml-4">
                     <Nav.Link>
                         <FaSignOutAlt /> Log out
                     </Nav.Link>
@@ -96,7 +107,8 @@ const mapStateToProps = (state: AppState) => ({
     pin: state.pin,
     url: state.anilistApi,
     clientId: state.clientId,
-    currentUser: state.currentUser
+    currentUser: state.currentUser,
+    currentAnime: state.currentOpenAnime
 });
 
 const setUser = (user: GQLUser) => {

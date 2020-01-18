@@ -4,7 +4,8 @@ import './AnimeTile.css';
 
 interface Props {
     animeName: string,
-    bannerUrl: string
+    bannerUrl: string,
+    nextEpisode: number
 }
 interface State {
     
@@ -20,6 +21,9 @@ export default class AnimeTile extends Component<Props, State> {
                 <Card.ImgOverlay className="img-overlay-gradient">
                     <Card.Title>{this.props.animeName}</Card.Title>
                 </Card.ImgOverlay>
+                <Card.Footer>
+                    Next episode: {this.props.nextEpisode}
+                </Card.Footer>
             </Card>
         )
     }

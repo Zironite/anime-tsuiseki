@@ -20,16 +20,21 @@ class ProfileView extends Component<ProfileViewProps, State> {
     }
     render() {
         return (
-            <CardDeck className="m-1">
-                {this.props.watchingAnimeList?.map(anime => {
-                    return (
-                        <div>
-                            <AnimeTile key={anime.media?.id} animeName={anime.media?.title?.userPreferred || ""}
-                                bannerUrl={anime.media?.bannerImage || ""} />
-                        </div>
-                    )
-                })}
-            </CardDeck>
+            <>
+                <h1 className="text-white m-1">Watching</h1>
+                <CardDeck className="m-1">
+                    {this.props.watchingAnimeList?.map(anime => {
+                        return (
+                            <div>
+                                <AnimeTile key={anime.media?.id} animeName={anime.media?.title?.userPreferred || ""}
+                                    bannerUrl={anime.media?.bannerImage || ""}
+                                    nextEpisode={(anime.progress || 0) + 1} />
+                            </div>
+                        )
+                    })}
+                </CardDeck>
+                <h1>Statistics</h1>
+            </>
         )
     }
 

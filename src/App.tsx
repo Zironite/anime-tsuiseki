@@ -7,7 +7,7 @@ import { ThunkAction } from 'redux-thunk';
 import { ConfigEntry } from './dm/ConfigEntry';
 import UserToolbar from './components/user-components/UserToolbar';
 import ReactModal from 'react-modal';
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import ProfileView from './components/user-components/ProfileView';
 import AnimeListComponent from './components/media-components/AnimeListComponent';
 import { setProcessCommandsToMonitor, setAcceptedExtensions, setFileNameRegexes } from './util/MainProcessCommunicationUtil';
@@ -60,7 +60,8 @@ class App extends Component<AppProps,AppComponentState> {
             </div>
           </ReactModal>
           <Switch>
-            <Route path="/profile/:profileId">
+            <Redirect from="/" to="/profile" exact/>
+            <Route path="/profile">
               <ProfileView />
             </Route>
             <Route path="/anime/list/:userId">

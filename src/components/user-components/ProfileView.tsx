@@ -16,6 +16,7 @@ class ProfileView extends Component<ProfileViewProps, State> {
     constructor(props: ProfileViewProps) {
         super(props);
 
+        this.getWatchingAnimeList = this.getWatchingAnimeList.bind(this);
         this.getWatchingAnimeList();
     }
     render() {
@@ -25,15 +26,15 @@ class ProfileView extends Component<ProfileViewProps, State> {
                 <CardDeck className="m-1">
                     {this.props.watchingAnimeList?.map(anime => {
                         return (
-                            <div>
-                                <AnimeTile key={anime.media?.id} animeName={anime.media?.title?.userPreferred || ""}
+                            <div key={anime.media?.id}>
+                                <AnimeTile animeName={anime.media?.title?.userPreferred || ""}
                                     bannerUrl={anime.media?.bannerImage || ""}
                                     nextEpisode={(anime.progress || 0) + 1} />
                             </div>
                         )
                     })}
                 </CardDeck>
-                <h1>Statistics</h1>
+                <h1 className="text-white m-1">Statistics</h1>
             </>
         )
     }
@@ -43,9 +44,20 @@ class ProfileView extends Component<ProfileViewProps, State> {
             this.props.setWatchingAnimeList(mediaList);
         }).catch(err => console.error(err));
     }
+
+    componentDidUpdate(prevProps: ProfileViewProps) {
+        if (this.props.url !== prevProps.url ||
+            this.props.pin !== prevProps.pin ||
+            this.props.userId !== prevProps.userId) {
+                this.getWatchingAnimeList();
+            }
+    }
 }
 
 const mapStateToProps = (state: AppState) => ({
+    url: state.anilistApi,
+    pin: state.pin,
+    userId: state.currentUser?.id,
     watchingAnimeList: state.watchingAnimeList
 });
 

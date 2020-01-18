@@ -10,6 +10,7 @@ query ($userId: Int, $page: Int, $perPage: Int, $status: MediaListStatus) {
         title {
             userPreferred
         }
+        bannerImage
     	}
   	}
     pageInfo {

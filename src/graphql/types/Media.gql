@@ -3,5 +3,6 @@ type Media {
     title: MediaTitle
     format: MediaFormat,
     episodes: Int
-    synonyms: [String]
+    synonyms: [String],
+    bannerImage: String
 }

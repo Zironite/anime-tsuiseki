@@ -46,6 +46,7 @@ export interface GQLMedia {
   format?: GQLMediaFormat;
   episodes?: number;
   synonyms?: Array<string | null>;
+  bannerImage?: string;
 }
 
 export interface GQLMediaTitle {
@@ -191,6 +192,7 @@ export interface GQLMediaTypeResolver<TParent = any> {
   format?: MediaToFormatResolver<TParent>;
   episodes?: MediaToEpisodesResolver<TParent>;
   synonyms?: MediaToSynonymsResolver<TParent>;
+  bannerImage?: MediaToBannerImageResolver<TParent>;
 }
 
 export interface MediaToIdResolver<TParent = any, TResult = any> {
@@ -210,6 +212,10 @@ export interface MediaToEpisodesResolver<TParent = any, TResult = any> {
 }
 
 export interface MediaToSynonymsResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface MediaToBannerImageResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 

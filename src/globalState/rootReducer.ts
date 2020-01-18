@@ -1,8 +1,8 @@
-import { IInitConfigDb, ISetPin, ILoadConfigFromDb, ISetUser, ISetCommands, ISetExtensions, ISetFileNameRegexes, IInitMediaSearchIndex, ISetCurrentOpenAnime } from "./actions";
+import { IInitConfigDb, ISetPin, ILoadConfigFromDb, ISetUser, ISetCommands, ISetExtensions, ISetFileNameRegexes, IInitMediaSearchIndex, ISetCurrentOpenAnime, ISetWatchingAnimeList } from "./actions";
 import { ConfigEntry, getFromConfigEntryList } from "../dm/ConfigEntry";
 import PouchDb from "pouchdb-browser";
 import upsertPlugin from "pouchdb-upsert";
-import { GQLUser } from "../graphql/graphqlTypes";
+import { GQLUser, GQLMediaList } from "../graphql/graphqlTypes";
 import IndexContainer from "../util/IndexContainer";
 import { MediaSearchIndexEntry, mediaSearchIndexEntryFields } from "../dm/MediaSearchIndexEntry";
 import { CurrentOpenAnime } from "../dm/CurrentWatchedAnime";
@@ -23,7 +23,8 @@ export enum AppStateActionTypes {
     SET_COMMANDS,
     SET_EXTENSIONS,
     SET_FILENAME_REGEXES,
-    SET_CURRENT_OPEN_ANIME
+    SET_CURRENT_OPEN_ANIME,
+    SET_WATCHING_ANIME_LIST
 }
 
 export interface IAppStateBaseAction {
@@ -40,11 +41,12 @@ export interface AppState {
     extensions?: string[],
     fileNameRegexes?: string[],
     mediaSearchIndex?: IndexContainer<MediaSearchIndexEntry>,
-    currentOpenAnime?: CurrentOpenAnime | null
+    currentOpenAnime?: CurrentOpenAnime | null,
+    watchingAnimeList?: GQLMediaList[]
 }
 
 export type TReducerActions = IInitConfigDb | IInitMediaSearchIndex | ISetPin | ILoadConfigFromDb | ISetUser | ISetCommands |
-    ISetExtensions | ISetFileNameRegexes | ISetCurrentOpenAnime
+    ISetExtensions | ISetFileNameRegexes | ISetCurrentOpenAnime | ISetWatchingAnimeList
 export function rootReducer(state: AppState = initialState, action: TReducerActions): AppState {
     switch(action.type) {
         case AppStateActionTypes.INIT_CONFIG_DB:
@@ -108,7 +110,9 @@ export function rootReducer(state: AppState = initialState, action: TReducerActi
             });
             return { ...state, fileNameRegexes: action.fileNameRegexes };
         case AppStateActionTypes.SET_CURRENT_OPEN_ANIME:
-            return { ...state, currentOpenAnime: action.anime }
+            return { ...state, currentOpenAnime: action.anime };
+        case AppStateActionTypes.SET_WATCHING_ANIME_LIST:
+            return { ...state, watchingAnimeList: action.data };
         default:
             return state;
     }

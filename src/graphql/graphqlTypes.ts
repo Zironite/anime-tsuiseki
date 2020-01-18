@@ -22,11 +22,20 @@ export interface GQLUser {
   id: number;
   name: string;
   avatar?: GQLUserAvatar;
+  statistics?: GQLUserStatisticTypes;
 }
 
 export interface GQLUserAvatar {
   large?: string;
   medium?: string;
+}
+
+export interface GQLUserStatisticTypes {
+  anime?: GQLUserStatistics;
+}
+
+export interface GQLUserStatistics {
+  count: number;
 }
 
 export interface GQLPage {
@@ -100,6 +109,8 @@ export interface GQLResolver {
   Query?: GQLQueryTypeResolver;
   User?: GQLUserTypeResolver;
   UserAvatar?: GQLUserAvatarTypeResolver;
+  UserStatisticTypes?: GQLUserStatisticTypesTypeResolver;
+  UserStatistics?: GQLUserStatisticsTypeResolver;
   Page?: GQLPageTypeResolver;
   MediaList?: GQLMediaListTypeResolver;
   Media?: GQLMediaTypeResolver;
@@ -128,6 +139,7 @@ export interface GQLUserTypeResolver<TParent = any> {
   id?: UserToIdResolver<TParent>;
   name?: UserToNameResolver<TParent>;
   avatar?: UserToAvatarResolver<TParent>;
+  statistics?: UserToStatisticsResolver<TParent>;
 }
 
 export interface UserToIdResolver<TParent = any, TResult = any> {
@@ -142,6 +154,10 @@ export interface UserToAvatarResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 
+export interface UserToStatisticsResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
 export interface GQLUserAvatarTypeResolver<TParent = any> {
   large?: UserAvatarToLargeResolver<TParent>;
   medium?: UserAvatarToMediumResolver<TParent>;
@@ -152,6 +168,22 @@ export interface UserAvatarToLargeResolver<TParent = any, TResult = any> {
 }
 
 export interface UserAvatarToMediumResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface GQLUserStatisticTypesTypeResolver<TParent = any> {
+  anime?: UserStatisticTypesToAnimeResolver<TParent>;
+}
+
+export interface UserStatisticTypesToAnimeResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface GQLUserStatisticsTypeResolver<TParent = any> {
+  count?: UserStatisticsToCountResolver<TParent>;
+}
+
+export interface UserStatisticsToCountResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 

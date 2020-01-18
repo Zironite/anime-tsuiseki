@@ -35,6 +35,7 @@ class ProfileView extends Component<ProfileViewProps, State> {
                     })}
                 </CardDeck>
                 <h1 className="text-white m-1">Statistics</h1>
+                <h2 className="text-white m-1">Count: {this.props.currentUser?.statistics?.anime?.count}</h2>
             </>
         )
     }
@@ -46,9 +47,10 @@ class ProfileView extends Component<ProfileViewProps, State> {
     }
 
     componentDidUpdate(prevProps: ProfileViewProps) {
-        if (this.props.url !== prevProps.url ||
+        if ((this.props.url !== prevProps.url ||
             this.props.pin !== prevProps.pin ||
-            this.props.userId !== prevProps.userId) {
+            this.props.currentUser !== prevProps.currentUser) &&
+            this.props.url && this.props.pin && this.props.currentUser) {
                 this.getWatchingAnimeList();
             }
     }
@@ -57,7 +59,7 @@ class ProfileView extends Component<ProfileViewProps, State> {
 const mapStateToProps = (state: AppState) => ({
     url: state.anilistApi,
     pin: state.pin,
-    userId: state.currentUser?.id,
+    currentUser: state.currentUser,
     watchingAnimeList: state.watchingAnimeList
 });
 

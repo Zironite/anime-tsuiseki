@@ -1,3 +1,7 @@
 type UserStatistics {
     count: Int!
+    meanScore: Float!
+    standardDeviation: Float!
+    minutesWatched: Int!
+    episodesWatched: Int!
 }

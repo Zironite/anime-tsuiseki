@@ -8,6 +8,10 @@ query {
         statistics {
             anime {
                 count
+                meanScore
+                standardDeviation
+                minutesWatched
+                episodesWatched
             }
         }
     }

@@ -36,6 +36,10 @@ export interface GQLUserStatisticTypes {
 
 export interface GQLUserStatistics {
   count: number;
+  meanScore: number;
+  standardDeviation: number;
+  minutesWatched: number;
+  episodesWatched: number;
 }
 
 export interface GQLPage {
@@ -181,9 +185,29 @@ export interface UserStatisticTypesToAnimeResolver<TParent = any, TResult = any>
 
 export interface GQLUserStatisticsTypeResolver<TParent = any> {
   count?: UserStatisticsToCountResolver<TParent>;
+  meanScore?: UserStatisticsToMeanScoreResolver<TParent>;
+  standardDeviation?: UserStatisticsToStandardDeviationResolver<TParent>;
+  minutesWatched?: UserStatisticsToMinutesWatchedResolver<TParent>;
+  episodesWatched?: UserStatisticsToEpisodesWatchedResolver<TParent>;
 }
 
 export interface UserStatisticsToCountResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface UserStatisticsToMeanScoreResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface UserStatisticsToStandardDeviationResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface UserStatisticsToMinutesWatchedResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface UserStatisticsToEpisodesWatchedResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 

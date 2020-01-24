@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { AppState, AppStateActionTypes } from '../../globalState/rootReducer'
 import { ISetWatchingAnimeList } from '../../globalState/actions'
 import AnimeTile from '../media-components/AnimeTile'
-import { CardDeck } from 'react-bootstrap'
+import { CardDeck, Card } from 'react-bootstrap'
 
 interface State {
 
@@ -35,7 +35,28 @@ class ProfileView extends Component<ProfileViewProps, State> {
                     })}
                 </CardDeck>
                 <h1 className="text-white m-1">Statistics</h1>
-                <h2 className="text-white m-1">Count: {this.props.currentUser?.statistics?.anime?.count}</h2>
+                <CardDeck className="m-1">
+                    <Card className="bg-dark text-white">
+                        <Card.Title>Anime Count</Card.Title>
+                        <Card.Body>{this.props.currentUser?.statistics?.anime?.count}</Card.Body>
+                    </Card>
+                    <Card className="bg-dark text-white">
+                        <Card.Title>Mean Score</Card.Title>
+                        <Card.Body>{this.props.currentUser?.statistics?.anime?.meanScore}</Card.Body>
+                    </Card>
+                    <Card className="bg-dark text-white">
+                        <Card.Title>Standard Deviation</Card.Title>
+                        <Card.Body>{this.props.currentUser?.statistics?.anime?.standardDeviation}</Card.Body>
+                    </Card>
+                    <Card className="bg-dark text-white">
+                        <Card.Title>Minutes Watched</Card.Title>
+                        <Card.Body>{this.props.currentUser?.statistics?.anime?.minutesWatched}</Card.Body>
+                    </Card>
+                    <Card className="bg-dark text-white">
+                        <Card.Title>Episodes Watched</Card.Title>
+                        <Card.Body>{this.props.currentUser?.statistics?.anime?.episodesWatched}</Card.Body>
+                    </Card>
+                </CardDeck>
             </>
         )
     }
